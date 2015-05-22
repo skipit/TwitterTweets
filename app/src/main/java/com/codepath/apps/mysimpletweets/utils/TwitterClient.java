@@ -1,4 +1,4 @@
-package com.codepath.apps.mysimpletweets;
+package com.codepath.apps.mysimpletweets.utils;
 
 import org.scribe.builder.api.Api;
 import org.scribe.builder.api.FlickrApi;
