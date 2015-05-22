@@ -20,6 +20,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         ImageView ivProfileImage;
         TextView tvUserName;
         TextView tvBody;
+        TextView tvScreenName;
     }
 
     public TweetsArrayAdapter(Context context, List<Tweet> objects) {
@@ -44,6 +45,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
             viewHolder.ivProfileImage = (ImageView) convertView.findViewById(R.id.ivProfileImage);
             viewHolder.tvUserName = (TextView) convertView.findViewById(R.id.tvUserName);
             viewHolder.tvBody = (TextView) convertView.findViewById(R.id.tvBody);
+            viewHolder.tvScreenName = (TextView) convertView.findViewById(R.id.tvScreenName);
 
             convertView.setTag(viewHolder);
         } else {
@@ -51,6 +53,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         }
 
         viewHolder.tvUserName.setText(tweet.getUser().getName());
+        viewHolder.tvScreenName.setText(tweet.getUser().getScreenName());
         viewHolder.tvBody.setText(tweet.getBody());
         viewHolder.ivProfileImage.setImageResource(android.R.color.transparent);
         Picasso.with(getContext())

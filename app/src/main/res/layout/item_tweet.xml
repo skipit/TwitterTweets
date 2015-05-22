@@ -30,4 +30,14 @@
         android:layout_below="@+id/tvUserName"
         android:layout_toRightOf="@+id/ivProfileImage"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/tvScreenName"
+        android:id="@+id/tvScreenName"
+        android:layout_alignBottom="@+id/tvUserName"
+        android:layout_toRightOf="@+id/tvUserName"
+        android:layout_toEndOf="@+id/tvUserName" />
+
 </RelativeLayout>
