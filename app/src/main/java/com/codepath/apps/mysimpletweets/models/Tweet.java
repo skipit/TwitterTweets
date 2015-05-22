@@ -68,10 +68,6 @@ public class Tweet {
             Tweet tweet = Tweet.fromJSON(tweetJson);
 
         }
-
-
-
-
         return tweets;
     }
 }

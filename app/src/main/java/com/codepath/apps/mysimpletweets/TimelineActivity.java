@@ -23,7 +23,11 @@ public class TimelineActivity extends ActionBarActivity {
     private TweetsArrayAdapter aTweets;
     private ListView lvTweets;
 
+    /* Tracks the most recent tweet-ID that was received */
     private long sinceId;
+
+    /* Tracks the oldest tweet-ID that was received */
+    private long oldestId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +44,7 @@ public class TimelineActivity extends ActionBarActivity {
         lvTweets.setOnScrollListener(new EndlessScrollListener() {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
-                //getTweets();
+                getOlderTweets();
             }
         });
         client = TwitterApplication.getRestClient();
@@ -56,8 +60,9 @@ public class TimelineActivity extends ActionBarActivity {
 
                 ArrayList<Tweet> tweets = Tweet.fromJSONArray(response);
                 aTweets.addAll(tweets);
-                Log.d("DEBUG: Next Id", ""+sinceId);
 
+                oldestId = aTweets.getItem(aTweets.getCount()-1).getUid();
+                Log.d("DEBUG:", "OldestID="+oldestId);
             }
 
             @Override
@@ -67,6 +72,31 @@ public class TimelineActivity extends ActionBarActivity {
         } );
     }
 
+    private void getOlderTweets () {
+        Log.d("DEBUG", "Getting Older Tweets");
+
+        client.getOlderTweets(oldestId, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                Log.d("DEBUG", response.toString());
+
+                ArrayList<Tweet> tweets = Tweet.fromJSONArray(response);
+                aTweets.addAll(tweets);
+
+                oldestId = aTweets.getItem(aTweets.getCount()-1).getUid();
+                Log.d("DEBUG:", "OldestID="+oldestId);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Log.d("DEBUG", errorResponse.toString());
+            }
+        } );
+    }
+
+    private void refreshHomeTimeline() {
+
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
