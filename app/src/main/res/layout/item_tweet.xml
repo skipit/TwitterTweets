@@ -49,6 +49,16 @@
             android:layout_below="@+id/tvScreenName"
             android:layout_toRightOf="@+id/ivProfileImage"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Small Text"
+            android:id="@+id/tvSince"
+            android:layout_above="@+id/tvScreenName"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
     </RelativeLayout>
 
 

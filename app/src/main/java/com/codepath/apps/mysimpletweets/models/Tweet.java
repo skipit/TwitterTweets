@@ -1,6 +1,8 @@
 package com.codepath.apps.mysimpletweets.models;
 
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,8 +57,19 @@ public class Tweet {
             tweet.user = User.fromJSON(json.getJSONObject("user"));
 
             tweet.createdAt = json.getString("created_at");
-            tweet.retweetCount = json.getInt("retweet_count");
-            tweet.favoriteCount = json.getInt("favourites_count");
+            try {
+                tweet.retweetCount = json.getInt("retweet_count");
+            } catch (JSONException e){
+                Log.d("DEBUG:", "no retweet count found");
+                tweet.retweetCount = 0;
+            }
+
+            try {
+                tweet.favoriteCount = json.getInt("favourites_count");
+            } catch (JSONException e) {
+                Log.d("DEBUG:","no favorite count found");
+                tweet.favoriteCount = 0;
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();

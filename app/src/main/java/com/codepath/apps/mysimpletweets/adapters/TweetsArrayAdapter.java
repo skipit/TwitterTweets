@@ -26,6 +26,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         TextView tvUserName;
         TextView tvBody;
         TextView tvScreenName;
+        TextView tvSince;
     }
 
     public TweetsArrayAdapter(Context context, List<Tweet> objects) {
@@ -51,6 +52,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
             viewHolder.tvUserName = (TextView) convertView.findViewById(R.id.tvUserName);
             viewHolder.tvBody = (TextView) convertView.findViewById(R.id.tvBody);
             viewHolder.tvScreenName = (TextView) convertView.findViewById(R.id.tvScreenName);
+            viewHolder.tvSince = (TextView) convertView.findViewById(R.id.tvSince);
 
             convertView.setTag(viewHolder);
         } else {
@@ -60,6 +62,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         viewHolder.tvUserName.setText(tweet.getUser().getName());
         viewHolder.tvScreenName.setText("@"+tweet.getUser().getScreenName());
         viewHolder.tvBody.setText(tweet.getBody());
+        viewHolder.tvSince.setText(getRelativeTimeAgo(tweet.getCreatedAt()));
         viewHolder.ivProfileImage.setImageResource(android.R.color.transparent);
         Picasso.with(getContext())
                 .load(tweet.getUser().getProfileImageUrl())
@@ -78,8 +81,9 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         String relativeDate = "";
         try {
             long dateMillis = sf.parse(rawJsonDate).getTime();
+//            relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis).toString();
             relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
-                    System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
+                    System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS, DateUtils.FORMAT_ABBREV_ALL).toString();
         } catch (ParseException e) {
             e.printStackTrace();
         }
