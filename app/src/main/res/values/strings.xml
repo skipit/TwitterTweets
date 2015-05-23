@@ -4,12 +4,11 @@
     <string name="app_name">SimpleTweets</string>
     <string name="login_label">Connect to Twitter</string>
     <string name="title_activity_timeline">Home timeline</string>
-
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="user_name">User Name</string>
     <string name="body">Body</string>
     <string name="tvScreenName">\@Screen Name</string>
     <string name="title_activity_tweet_compose">TweetComposeActivity</string>
+    <string name="compose_hint">Start typing the tweet ...</string>
 
 </resources>

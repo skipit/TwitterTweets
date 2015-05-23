@@ -1,9 +1,10 @@
 package com.codepath.apps.mysimpletweets.activities;
 
-import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,13 +12,25 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.codepath.apps.mysimpletweets.R;
+import com.codepath.apps.mysimpletweets.TwitterApplication;
 import com.codepath.apps.mysimpletweets.models.UserAccountInformation;
+import com.codepath.apps.mysimpletweets.utils.TwitterClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.apache.http.Header;
+import org.json.JSONObject;
 
 public class TweetComposeActivity extends ActionBarActivity {
 
     private Menu menu;
     private UserAccountInformation info;
-    MenuItem etRemainingChar;
+    MenuItem miRemainingChar;
+    /* Used to call the REST APIs */
+    private TwitterClient client;
+
+    EditText etTweet;
+
+    private final int MAX_TWEET_LENGTH = 140;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,13 +41,33 @@ public class TweetComposeActivity extends ActionBarActivity {
 
         ActionBar actionBar = getSupportActionBar(); // or getActionBar();
         actionBar.setTitle("@" + info.getScreenName());
-
+        client = TwitterApplication.getRestClient();
         setupComposeTweetActivity();
+
     }
 
 
     private void setupComposeTweetActivity() {
+        etTweet = (EditText) findViewById(R.id.etTweetBody);
+        etTweet.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                int textLength = etTweet.getText().length();
+                int remainingCharacters = MAX_TWEET_LENGTH - textLength;
+                miRemainingChar.setTitle("" +remainingCharacters);
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     @Override
@@ -43,14 +76,27 @@ public class TweetComposeActivity extends ActionBarActivity {
         getMenuInflater().inflate(R.menu.menu_tweet_compose, menu);
 
         this.menu = menu;
-        etRemainingChar = menu.findItem(R.id.tweet_length);
-        etRemainingChar.setTitle(""+140);
+        miRemainingChar = menu.findItem(R.id.tweet_length);
+        miRemainingChar.setTitle("" + MAX_TWEET_LENGTH);
 
         return true;
     }
 
     private void sendTweet() {
         Log.d("DEBUG", "Sending Tweet");
+        client.postTweet(etTweet.getText().toString(), new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("DEBUG", "Post Updated");
+                etTweet.setText("");
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Log.d("DEBUG", errorResponse.toString());
+
+            }
+        });
     }
 
     @Override
