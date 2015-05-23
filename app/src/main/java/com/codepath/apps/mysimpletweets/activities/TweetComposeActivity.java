@@ -43,7 +43,10 @@ public class TweetComposeActivity extends ActionBarActivity {
         info = (UserAccountInformation) getIntent().getSerializableExtra("user_info");
 
         ActionBar actionBar = getSupportActionBar(); // or getActionBar();
-        actionBar.setTitle("@" + info.getScreenName());
+        if ( info != null ) {
+            actionBar.setTitle("@" + info.getScreenName());
+
+        }
         client = TwitterApplication.getRestClient();
         setupComposeTweetActivity();
 

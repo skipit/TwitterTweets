@@ -62,7 +62,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/body"
-            android:autoLink="all"
             android:id="@+id/tvBody"
             android:paddingTop="5dp"
             android:textAppearance="?android:attr/textAppearanceMedium"

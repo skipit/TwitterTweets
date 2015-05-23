@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -62,6 +64,10 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         super.onResume();
     }
 
+    public UserAccountInformation getAccountInfo() {
+        return accountInfo;
+    }
+
     public void setupSwipeContainer() {
         //// Set up the Swipe Container
         //Get the Swipe Container
@@ -89,6 +95,13 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
                 getOlderTweets();
+            }
+        });
+
+        lvTweets.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("DEBUG:","Item clicked at position " + position);
             }
         });
     }

@@ -6,6 +6,7 @@ import org.scribe.builder.api.TwitterApi;
 
 import android.content.Context;
 
+import com.codepath.apps.mysimpletweets.models.Tweet;
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -67,6 +68,7 @@ public class TwitterClient extends OAuthBaseClient {
         params.put("status", tweet);
         getClient().post(apiUrl, params, handler);
     }
+    
 	/* 1. Define the endpoint URL with getApiUrl and pass a relative path to the endpoint
 	 * 	  i.e getApiUrl("statuses/home_timeline.json");
 	 * 2. Define the parameters to pass to the request (query or body)

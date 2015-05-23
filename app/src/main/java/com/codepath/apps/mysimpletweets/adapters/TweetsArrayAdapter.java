@@ -2,7 +2,9 @@ package com.codepath.apps.mysimpletweets.adapters;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +13,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codepath.apps.mysimpletweets.R;
+import com.codepath.apps.mysimpletweets.activities.TimelineActivity;
+import com.codepath.apps.mysimpletweets.activities.TweetComposeActivity;
 import com.codepath.apps.mysimpletweets.models.Tweet;
+import com.codepath.apps.mysimpletweets.models.UserAccountInformation;
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
@@ -31,6 +36,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         TextView tvSince;
         TextView tvFavCount;
         TextView tvRetweetCount;
+        ImageView ivReplyImage;
     }
 
     public TweetsArrayAdapter(Context context, List<Tweet> objects) {
@@ -43,7 +49,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Tweet tweet = getItem(position);
+        final Tweet tweet = getItem(position);
 
         ViewHolder viewHolder;
         if ( convertView == null ) {
@@ -59,6 +65,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
             viewHolder.tvSince = (TextView) convertView.findViewById(R.id.tvSince);
             viewHolder.tvFavCount = (TextView) convertView.findViewById(R.id.tvFavCount);
             viewHolder.tvRetweetCount = (TextView) convertView.findViewById(R.id.tvRetweetCount);
+            viewHolder.ivReplyImage = (ImageView) convertView.findViewById(R.id.ivReply);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -85,6 +92,20 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
                 .load(tweet.getUser().getProfileImageUrl())
                 .into(viewHolder.ivProfileImage);
 
+
+        viewHolder.ivReplyImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserAccountInformation info = ((TimelineActivity) getContext()).getAccountInfo();
+                Log.d("DEBUG:", "Image Clicked");
+                Intent i =  new Intent(getContext(), TweetComposeActivity.class);
+                i.putExtra("user_info", info);
+                i.putExtra("tweet_detail", (java.io.Serializable) tweet);
+                getContext().startActivity(i);
+
+                Log.d("DEBUG:", info.getScreenName());
+            }
+        });
 
         return convertView;
     }
