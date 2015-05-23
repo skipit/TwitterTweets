@@ -29,6 +29,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         TextView tvBody;
         TextView tvScreenName;
         TextView tvSince;
+        TextView tvFavCount;
     }
 
     public TweetsArrayAdapter(Context context, List<Tweet> objects) {
@@ -55,7 +56,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
             viewHolder.tvBody = (TextView) convertView.findViewById(R.id.tvBody);
             viewHolder.tvScreenName = (TextView) convertView.findViewById(R.id.tvScreenName);
             viewHolder.tvSince = (TextView) convertView.findViewById(R.id.tvSince);
-
+            viewHolder.tvFavCount = (TextView) convertView.findViewById(R.id.tvFavCount);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -66,6 +67,11 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         viewHolder.tvBody.setText(tweet.getBody());
         viewHolder.tvSince.setText(getRelativeTimeAgo(tweet.getCreatedAt()));
         viewHolder.ivProfileImage.setImageResource(android.R.color.transparent);
+        if ( tweet.getFavoriteCount() > 0 ) {
+            viewHolder.tvFavCount.setText(tweet.getFavoriteCount());
+        } else {
+            viewHolder.tvFavCount.setText("0");
+        }
         Picasso.with(getContext())
                 .load(tweet.getUser().getProfileImageUrl())
                 .into(viewHolder.ivProfileImage);
