@@ -99,11 +99,21 @@
         <ImageView
             android:layout_width="16dp"
             android:layout_height="16dp"
-            android:id="@+id/imageView"
+            android:id="@+id/ivFav"
             android:src="@drawable/ic_fav"
             android:paddingRight="5dp"
             android:layout_centerInParent="true"
             android:layout_toLeftOf="@id/tvFavCount" />
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:id="@+id/ivReply"
+            android:src="@drawable/ic_reply"
+            android:paddingLeft="5dp"
+            android:layout_centerInParent="true"
+            android:layout_alignParentStart="true"/>
+
     </RelativeLayout>
 
 
