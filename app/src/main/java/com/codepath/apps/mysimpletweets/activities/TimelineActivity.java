@@ -40,9 +40,6 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     /* The Handle to the SwipeRefresh */
     private SwipeRefreshLayout swipeContainer;
 
-    /* Tracks the most recent tweet-ID that was received */
-    private long recentTweetId;
-
     /* Tracks the oldest tweet-ID that was received */
     private long oldestId;
 
@@ -54,12 +51,15 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         setupSwipeContainer();
         setupTweetListView();
 
-         /* Initialize the TweetId */
-        recentTweetId = 1;
-
         client = TwitterApplication.getRestClient();
         getUserInformation();
         getTweets();
+    }
+
+    @Override
+    protected void onResume() {
+        getTweets();
+        super.onResume();
     }
 
     public void setupSwipeContainer() {

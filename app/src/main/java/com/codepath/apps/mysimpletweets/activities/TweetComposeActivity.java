@@ -102,7 +102,7 @@ public class TweetComposeActivity extends ActionBarActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 Log.d("DEBUG", errorResponse.toString());
-
+                Toast.makeText(getApplicationContext(), "Could not post the tweet\n Try Again.", Toast.LENGTH_LONG).show();
             }
         });
     }
