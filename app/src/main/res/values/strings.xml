@@ -10,5 +10,6 @@
     <string name="user_name">User Name</string>
     <string name="body">Body</string>
     <string name="tvScreenName">\@Screen Name</string>
+    <string name="title_activity_tweet_compose">TweetComposeActivity</string>
 
 </resources>

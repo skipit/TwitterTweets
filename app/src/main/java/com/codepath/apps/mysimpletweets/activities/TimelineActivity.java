@@ -1,5 +1,6 @@
 package com.codepath.apps.mysimpletweets.activities;
 
+import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -7,7 +8,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.codepath.apps.mysimpletweets.models.UserAccountInformation;
 import com.codepath.apps.mysimpletweets.utils.EndlessScrollListener;
 import com.codepath.apps.mysimpletweets.R;
 import com.codepath.apps.mysimpletweets.adapters.TweetsArrayAdapter;
@@ -32,6 +35,8 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     private TweetsArrayAdapter aTweets;
     private ListView lvTweets;
 
+    private UserAccountInformation accountInfo;
+
     /* The Handle to the SwipeRefresh */
     private SwipeRefreshLayout swipeContainer;
 
@@ -53,7 +58,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         recentTweetId = 1;
 
         client = TwitterApplication.getRestClient();
-
+        getUserInformation();
         getTweets();
     }
 
@@ -80,11 +85,26 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         lvTweets.setAdapter(aTweets);
 
 
-
         lvTweets.setOnScrollListener(new EndlessScrollListener() {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
                 getOlderTweets();
+            }
+        });
+    }
+
+
+    private void getUserInformation() {
+        client.getAccountInformation(new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("DEBUG", response.toString());
+                accountInfo = UserAccountInformation.fromJSONObject(response);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Log.d("DEBUG", errorResponse.toString());
             }
         });
     }
@@ -160,7 +180,20 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
             return true;
         }
 
+        if ( id == R.id.action_compose ) {
+            composeMessage();
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
+    }
+
+    private void composeMessage() {
+        UserAccountInformation info = accountInfo;
+
+        Intent i =  new Intent(TimelineActivity.this, TweetComposeActivity.class);
+        i.putExtra("user_info", info);
+        startActivity(i);
     }
 
     @Override

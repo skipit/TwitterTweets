@@ -10,7 +10,6 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
@@ -52,6 +51,14 @@
         <activity
             android:name=".activities.TimelineActivity"
             android:label="@string/title_activity_timeline" >
+        </activity>
+        <activity
+            android:name=".activities.TweetComposeActivity"
+            android:label="@string/title_activity_tweet_compose"
+            android:parentActivityName=".activities.TimelineActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.codepath.apps.mysimpletweets.activities.TimelineActivity" />
         </activity>
     </application>
 
