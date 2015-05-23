@@ -1,5 +1,8 @@
 package com.codepath.apps.mysimpletweets.activities;
 
+import android.app.Activity;
+import android.content.Context;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -84,11 +87,16 @@ public class TweetComposeActivity extends ActionBarActivity {
 
     private void sendTweet() {
         Log.d("DEBUG", "Sending Tweet");
+        final Activity parentActivity = this;
         client.postTweet(etTweet.getText().toString(), new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Log.d("DEBUG", "Post Updated");
                 etTweet.setText("");
+
+                //-- Lets go back to the parent Activity.
+                NavUtils.navigateUpFromSameTask(parentActivity);
+
             }
 
             @Override
