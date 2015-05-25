@@ -6,7 +6,7 @@
         android:orderInCategory="100" app:showAsAction="never" />
     <item
         android:id="@+id/action_compose"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/ic_twitter_compose"
         app:showAsAction="ifRoom"
         android:title="Compose"
         android:orderInCategory="50"/>

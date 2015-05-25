@@ -10,7 +10,7 @@
 
     <item
         android:id="@+id/action_send"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/ic_tweet_send"
         app:showAsAction="ifRoom"
         android:title="Send"
         android:orderInCategory="100"/>
