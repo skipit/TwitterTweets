@@ -10,5 +10,8 @@
     <string name="tvScreenName">\@Screen Name</string>
     <string name="title_activity_tweet_compose">TweetComposeActivity</string>
     <string name="compose_hint">Start typing the tweet ...</string>
+    <string name="offline_error">Offline: Cannot perform operation!</string>
+    <string name="load_offline">Offline: Home timeline may not be latest!</string>
+    <string name="offline_cannot_getmore">Offline: Cannot get older tweets!</string>
 
 </resources>

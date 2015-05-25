@@ -1,7 +1,6 @@
 package com.codepath.apps.mysimpletweets.activities;
 
 import android.app.Activity;
-import android.content.Context;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -18,6 +17,7 @@ import com.codepath.apps.mysimpletweets.R;
 import com.codepath.apps.mysimpletweets.TwitterApplication;
 import com.codepath.apps.mysimpletweets.models.Tweet;
 import com.codepath.apps.mysimpletweets.models.UserAccountInformation;
+import com.codepath.apps.mysimpletweets.utils.AppStatus;
 import com.codepath.apps.mysimpletweets.utils.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -58,7 +58,7 @@ public class TweetComposeActivity extends ActionBarActivity {
     private void setupComposeTweetActivity() {
         etTweet = (EditText) findViewById(R.id.etTweetBody);
         if ( tweet != null ) {
-            etTweet.append("@"+tweet.getUser().getScreenName()+" ");
+            etTweet.append("@" + tweet.getUser().getScreenName() + " ");
         }
         etTweet.addTextChangedListener(new TextWatcher() {
             @Override
@@ -71,7 +71,6 @@ public class TweetComposeActivity extends ActionBarActivity {
                 int textLength = etTweet.getText().length();
                 int remainingCharacters = MAX_TWEET_LENGTH - textLength;
                 miRemainingChar.setTitle("" + remainingCharacters);
-
             }
 
             @Override
@@ -149,7 +148,11 @@ public class TweetComposeActivity extends ActionBarActivity {
         }
 
         if ( id == R.id.action_send ) {
-            sendTweet();
+            if (AppStatus.getInstance(this).isOnline() == true ) {
+                sendTweet();
+            } else {
+                Toast.makeText(this, R.string.offline_error, Toast.LENGTH_SHORT).show();
+            }
             return true;
         }
 

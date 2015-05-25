@@ -3,28 +3,41 @@ package com.codepath.apps.mysimpletweets.models;
 
 import android.util.Log;
 
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
-public class Tweet implements Serializable  {
-    private String body;
+@Table(name = "Tweets")
+public class Tweet extends Model implements Serializable  {
+    @Column(name = "TweetUid", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     private long uid;
+    @Column(name = "Body")
+    private String body;
+    @Column(name = "User", onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
     private User user;
+    @Column(name = "CreatedAt")
     private String createdAt;
+    @Column(name = "RetweetCount")
     private int retweetCount;
+    @Column(name = "FavoriteCount")
     private int favoriteCount;
-
-
+    @Column(name = "Favorited")
     private boolean favorited;
 
     public Tweet() {
+        super();
         retweetCount = 0;
         favoriteCount = 0;
         favorited = false;
+
     }
 
 
@@ -56,6 +69,9 @@ public class Tweet implements Serializable  {
         return favorited;
     }
 
+    public List<Tweet> tweets() {
+        return getMany(Tweet.class, "Tweet");
+    }
 
     public static Tweet fromJSON(JSONObject json) {
         Tweet tweet = new Tweet();
@@ -82,6 +98,9 @@ public class Tweet implements Serializable  {
             }
 
             tweet.favorited = json.getBoolean("favorited");
+
+            // TODO: Temporary Location to save tweet.
+            tweet.save();
 
         } catch (JSONException e) {
             e.printStackTrace();

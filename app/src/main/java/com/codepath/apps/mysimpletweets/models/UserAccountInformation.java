@@ -1,6 +1,8 @@
 package com.codepath.apps.mysimpletweets.models;
 
 
+import com.activeandroid.Model;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 

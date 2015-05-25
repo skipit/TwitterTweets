@@ -18,6 +18,7 @@ import com.codepath.apps.mysimpletweets.activities.TimelineActivity;
 import com.codepath.apps.mysimpletweets.activities.TweetComposeActivity;
 import com.codepath.apps.mysimpletweets.models.Tweet;
 import com.codepath.apps.mysimpletweets.models.UserAccountInformation;
+import com.codepath.apps.mysimpletweets.utils.AppStatus;
 import com.codepath.apps.mysimpletweets.utils.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
@@ -100,45 +101,48 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
                 .load(tweet.getUser().getProfileImageUrl())
                 .into(viewHolder.ivProfileImage);
 
-
-        viewHolder.ivReplyImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UserAccountInformation info = ((TimelineActivity) getContext()).getAccountInfo();
-                Log.d("DEBUG:", "Image Clicked");
-                Intent i =  new Intent(getContext(), TweetComposeActivity.class);
-                i.putExtra("user_info", info);
-                i.putExtra("tweet_detail", (java.io.Serializable) tweet);
-                getContext().startActivity(i);
-
-                Log.d("DEBUG:", info.getScreenName());
-            }
-        });
-
         if (tweet.isFavorited()) {
             viewHolder.ivFavImage.setImageResource(R.drawable.ic_fav_favorited );
         } else {
             viewHolder.ivFavImage.setImageResource(R.drawable.ic_fav);
         }
 
-        viewHolder.ivFavImage.setOnClickListener(new View.OnClickListener() {
-            final TwitterClient client = TwitterApplication.getRestClient();
-            @Override
-            public void onClick(View v) {
-                client.postFavTweet(tweet.isFavorited(), tweet.getUid(), new JsonHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        Log.d("DEBUG:", "Updated Favorites " + response.toString());
-                        ((TimelineActivity) getContext()).onRefresh();
-                    }
+        /* Do not set OnClickListeners if offline */
+        if (AppStatus.getInstance(getContext()).isOnline() == true ) {
+            viewHolder.ivReplyImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    UserAccountInformation info = ((TimelineActivity) getContext()).getAccountInfo();
+                    Log.d("DEBUG:", "Image Clicked");
+                    Intent i = new Intent(getContext(), TweetComposeActivity.class);
+                    i.putExtra("user_info", info);
+                    i.putExtra("tweet_detail", (java.io.Serializable) tweet);
+                    getContext().startActivity(i);
 
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                        Log.d("DEBUG:", "Could not Update Favorites " + errorResponse.toString());
-                    }
-                });
-            }
-        });
+                    Log.d("DEBUG:", info.getScreenName());
+                }
+            });
+
+            viewHolder.ivFavImage.setOnClickListener(new View.OnClickListener() {
+                final TwitterClient client = TwitterApplication.getRestClient();
+
+                @Override
+                public void onClick(View v) {
+                    client.postFavTweet(tweet.isFavorited(), tweet.getUid(), new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            Log.d("DEBUG:", "Updated Favorites " + response.toString());
+                            ((TimelineActivity) getContext()).onRefresh();
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                            Log.d("DEBUG:", "Could not Update Favorites " + errorResponse.toString());
+                        }
+                    });
+                }
+            });
+        }
 
         return convertView;
     }

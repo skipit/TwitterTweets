@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.activeandroid.query.Select;
 import com.codepath.apps.mysimpletweets.models.UserAccountInformation;
 import com.codepath.apps.mysimpletweets.utils.EndlessScrollListener;
 import com.codepath.apps.mysimpletweets.R;
@@ -20,12 +21,14 @@ import com.codepath.apps.mysimpletweets.TwitterApplication;
 import com.codepath.apps.mysimpletweets.utils.TwitterClient;
 import com.codepath.apps.mysimpletweets.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.codepath.apps.mysimpletweets.utils.AppStatus;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TimelineActivity extends ActionBarActivity implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -55,13 +58,21 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
 
         client = TwitterApplication.getRestClient();
         getUserInformation();
-        getTweets();
     }
 
     @Override
     protected void onResume() {
+        loadOfflineTweets();
         getTweets();
         super.onResume();
+    }
+
+    private void loadOfflineTweets() {
+        Log.d("DEBUG:", "Loading Tweets from Offline Database");
+        // Query ActiveAndroid for list of data
+        List<Tweet> queryResults = new Select().from(Tweet.class)
+                .orderBy("TweetUID DESC").execute();
+        aTweets.addAll(queryResults);
     }
 
     public UserAccountInformation getAccountInfo() {
@@ -108,18 +119,21 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
 
 
     private void getUserInformation() {
-        client.getAccountInformation(new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Log.d("DEBUG", response.toString());
-                accountInfo = UserAccountInformation.fromJSONObject(response);
-            }
+        if ( ( accountInfo == null ) &&
+             ( AppStatus.getInstance(this).isOnline() == true ) ) {
+            client.getAccountInformation(new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    Log.d("DEBUG", response.toString());
+                    accountInfo = UserAccountInformation.fromJSONObject(response);
+                }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d("DEBUG", errorResponse.toString());
-            }
-        });
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    Log.d("DEBUG", errorResponse.toString());
+                }
+            });
+        }
     }
 
     /**
@@ -127,25 +141,34 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
      */
     private void getTweets() {
 
-        client.getHomeTimeline(new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                Log.d("DEBUG", response.toString());
+        if ( AppStatus.getInstance(this).isOnline() == true ) {
+            client.getHomeTimeline(new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                    Log.d("DEBUG", response.toString());
 
-                ArrayList<Tweet> tweets = Tweet.fromJSONArray(response);
+                    ArrayList<Tweet> tweets = Tweet.fromJSONArray(response);
 
-                aTweets.clear(); /* Clear the items in the array to reload */
-                aTweets.addAll(tweets);
+                    aTweets.clear(); /* Clear the items in the array to reload */
+                    aTweets.addAll(tweets);
 
-                oldestId = aTweets.getItem(aTweets.getCount()-1).getUid();
-                Log.d("DEBUG:", "OldestID="+oldestId);
-            }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d("DEBUG", errorResponse.toString());
-            }
-        } );
+                    oldestId = aTweets.getItem(aTweets.getCount() - 1).getUid();
+                    Log.d("DEBUG:", "OldestID=" + oldestId);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    Log.d("DEBUG", errorResponse.toString());
+                }
+            });
+        }else {
+            Toast.makeText(this, R.string.load_offline, Toast.LENGTH_SHORT).show();
+            aTweets.clear();
+            List<Tweet> queryResults = new Select().from(Tweet.class)
+                    .orderBy("TweetUid").limit(100).execute();
+            aTweets.addAll(queryResults);
+        }
     }
 
     /**
@@ -155,23 +178,27 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
 
         Log.d("DEBUG", "Getting Older Tweets");
 
-        client.getOlderTweets(oldestId, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                Log.d("DEBUG", response.toString());
+        if ( AppStatus.getInstance(this).isOnline() == true ) {
+            client.getOlderTweets(oldestId, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                    Log.d("DEBUG", response.toString());
 
-                ArrayList<Tweet> tweets = Tweet.fromJSONArray(response);
-                aTweets.addAll(tweets);
+                    ArrayList<Tweet> tweets = Tweet.fromJSONArray(response);
+                    aTweets.addAll(tweets);
 
-                oldestId = aTweets.getItem(aTweets.getCount() - 1).getUid();
-                Log.d("DEBUG:", "OldestID=" + oldestId);
-            }
+                    oldestId = aTweets.getItem(aTweets.getCount() - 1).getUid();
+                    Log.d("DEBUG:", "OldestID=" + oldestId);
+                }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d("DEBUG", errorResponse.toString());
-            }
-        });
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    Log.d("DEBUG", errorResponse.toString());
+                }
+            });
+        } else {
+            Toast.makeText(this, R.string.offline_cannot_getmore, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -193,8 +220,13 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
             return true;
         }
 
+        /* Cannot compose if not online */
         if ( id == R.id.action_compose ) {
-            composeMessage();
+            if ( AppStatus.getInstance(this).isOnline() == true ) {
+                composeMessage();
+            } else {
+                Toast.makeText(this, R.string.offline_error, Toast.LENGTH_SHORT).show();
+            }
             return true;
         }
 
@@ -215,4 +247,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         // Notify the Container that refresh has completed
         swipeContainer.setRefreshing(false);
     }
+
+
+
 }
