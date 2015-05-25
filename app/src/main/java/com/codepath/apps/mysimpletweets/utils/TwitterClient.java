@@ -77,8 +77,13 @@ public class TwitterClient extends OAuthBaseClient {
         getClient().post(apiUrl, params, handler);
     }
 
-    public void postFavTweet(long FavTweet, AsyncHttpResponseHandler handler ) {
-        String apiUrl = getApiUrl("favorites/create.json");
+    public void postFavTweet(boolean favoriteStatus, long FavTweet, AsyncHttpResponseHandler handler ) {
+        String apiUrl;
+        if ( favoriteStatus == false ) {
+            apiUrl = getApiUrl("favorites/create.json");
+        } else {
+            apiUrl = getApiUrl("favorites/destroy.json");
+        }
         RequestParams params = new RequestParams();
         params.put("id", FavTweet);
         getClient().post(apiUrl, params, handler);

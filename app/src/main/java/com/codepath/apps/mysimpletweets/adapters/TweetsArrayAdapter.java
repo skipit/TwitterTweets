@@ -85,7 +85,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         viewHolder.tvSince.setText(getRelativeTimeAgo(tweet.getCreatedAt()));
         viewHolder.ivProfileImage.setImageResource(android.R.color.transparent);
         if ( tweet.getFavoriteCount() > 0 ) {
-            viewHolder.tvFavCount.setText(tweet.getFavoriteCount());
+            viewHolder.tvFavCount.setText(""+tweet.getFavoriteCount());
         } else {
             viewHolder.tvFavCount.setText("0");
         }
@@ -115,11 +115,17 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
             }
         });
 
+        if (tweet.isFavorited()) {
+            viewHolder.ivFavImage.setImageResource(R.drawable.ic_fav_favorited );
+        } else {
+            viewHolder.ivFavImage.setImageResource(R.drawable.ic_fav);
+        }
+
         viewHolder.ivFavImage.setOnClickListener(new View.OnClickListener() {
             final TwitterClient client = TwitterApplication.getRestClient();
             @Override
             public void onClick(View v) {
-                client.postFavTweet(tweet.getUid(), new JsonHttpResponseHandler() {
+                client.postFavTweet(tweet.isFavorited(), tweet.getUid(), new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         Log.d("DEBUG:", "Updated Favorites " + response.toString());

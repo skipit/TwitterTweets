@@ -75,7 +75,7 @@ public class Tweet implements Serializable  {
             }
 
             try {
-                tweet.favoriteCount = json.getInt("favourites_count");
+                tweet.favoriteCount = json.getInt("favorite_count");
             } catch (JSONException e) {
                 Log.d("DEBUG:","no favorite count found");
                 tweet.favoriteCount = 0;

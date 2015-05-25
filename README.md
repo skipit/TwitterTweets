@@ -39,6 +39,7 @@ The following **additional** features are implemented:
 * [x] Favorite Count of tweet can be seen
 * [x] Retweet Count of a tweet can be seen
 * [x] Reply can be done from the list item view on clicking the reply image
+* [x] User can Favorite/Un-favorite a link. 
 
 ## Video Walkthrough 
 
