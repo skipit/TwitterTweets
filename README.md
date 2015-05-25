@@ -1,6 +1,6 @@
-# Project 3 - Twitter Client
+# Project 3 - TwitterTweets
 
-Twitter Client is an android app that allows a user to view his Twitter timeline and post a new tweet. The app utilizes [Twitter REST API](https://dev.twitter.com/rest/public).
+TwitterTweets is an android app that allows a user to view his Twitter timeline and post a new tweet. The app utilizes [Twitter REST API](https://dev.twitter.com/rest/public).
 
 Time spent: 13.5 hours spent in total
 
