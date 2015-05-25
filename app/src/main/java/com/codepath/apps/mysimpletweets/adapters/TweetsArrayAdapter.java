@@ -3,7 +3,6 @@ package com.codepath.apps.mysimpletweets.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +17,9 @@ import com.codepath.apps.mysimpletweets.activities.TimelineActivity;
 import com.codepath.apps.mysimpletweets.activities.TweetComposeActivity;
 import com.codepath.apps.mysimpletweets.models.Tweet;
 import com.codepath.apps.mysimpletweets.models.UserAccountInformation;
-import com.codepath.apps.mysimpletweets.utils.AppStatus;
+import com.codepath.apps.mysimpletweets.utils.NetStatus;
 import com.codepath.apps.mysimpletweets.utils.Constants;
+import com.codepath.apps.mysimpletweets.utils.Transform;
 import com.codepath.apps.mysimpletweets.utils.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
@@ -27,12 +27,7 @@ import com.squareup.picasso.Picasso;
 import org.apache.http.Header;
 import org.json.JSONObject;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
 
@@ -86,7 +81,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         viewHolder.tvUserName.setText(tweet.getUser().getName());
         viewHolder.tvScreenName.setText("@"+tweet.getUser().getScreenName());
         viewHolder.tvBody.setText(tweet.getBody());
-        viewHolder.tvSince.setText(getRelativeTimeAgo(tweet.getCreatedAt()));
+        viewHolder.tvSince.setText(Transform.getRelativeTimeAgo(tweet.getCreatedAt()));
         viewHolder.ivProfileImage.setImageResource(android.R.color.transparent);
         if ( tweet.getFavoriteCount() > 0 ) {
             viewHolder.tvFavCount.setText(""+tweet.getFavoriteCount());
@@ -111,7 +106,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         }
 
         /* Do not set OnClickListeners if offline */
-        if (AppStatus.getInstance(getContext()).isOnline() == true ) {
+        if (NetStatus.getInstance(getContext()).isOnline() == true ) {
             viewHolder.ivReplyImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -171,57 +166,5 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
     }
 
 
-    private String getRelativeTimeAgo(String rawJsonDate) {
-        String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
-        SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
-        sf.setLenient(true);
 
-        String relativeDate = "";
-        try {
-            Date postedDate = sf.parse(rawJsonDate);
-            relativeDate = getDateDifferenceForDisplay(postedDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return relativeDate;
-    }
-
-    //Got from StackOverflow
-    public static String getDateDifferenceForDisplay(Date inputdate) {
-        Calendar now = Calendar.getInstance();
-        Calendar then = Calendar.getInstance();
-
-        now.setTime(new Date());
-        then.setTime(inputdate);
-
-        // Get the represented date in milliseconds
-        long nowMs = now.getTimeInMillis();
-        long thenMs = then.getTimeInMillis();
-
-        // Calculate difference in milliseconds
-        long diff = nowMs - thenMs;
-
-        // Calculate difference in seconds
-        long diffMinutes = diff / (60 * 1000);
-        long diffHours = diff / (60 * 60 * 1000);
-        long diffDays = diff / (24 * 60 * 60 * 1000);
-
-        if (diffMinutes < 60) {
-            return diffMinutes + "m ";
-
-        } else if (diffHours < 24) {
-            return diffHours + "h ";
-
-        } else if (diffDays < 7) {
-            return diffDays + "d ";
-
-        } else {
-
-            SimpleDateFormat todate = new SimpleDateFormat("MMM dd",
-                    Locale.ENGLISH);
-
-            return todate.format(inputdate);
-        }
-    }
 }

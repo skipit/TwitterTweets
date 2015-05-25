@@ -17,7 +17,7 @@ import com.codepath.apps.mysimpletweets.R;
 import com.codepath.apps.mysimpletweets.TwitterApplication;
 import com.codepath.apps.mysimpletweets.models.Tweet;
 import com.codepath.apps.mysimpletweets.models.UserAccountInformation;
-import com.codepath.apps.mysimpletweets.utils.AppStatus;
+import com.codepath.apps.mysimpletweets.utils.NetStatus;
 import com.codepath.apps.mysimpletweets.utils.Constants;
 import com.codepath.apps.mysimpletweets.utils.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -149,7 +149,7 @@ public class TweetComposeActivity extends ActionBarActivity {
         }
 
         if ( id == R.id.action_send ) {
-            if (AppStatus.getInstance(this).isOnline() == true ) {
+            if (NetStatus.getInstance(this).isOnline() == true ) {
                 sendTweet();
             } else {
                 Toast.makeText(this, R.string.offline_error, Toast.LENGTH_SHORT).show();

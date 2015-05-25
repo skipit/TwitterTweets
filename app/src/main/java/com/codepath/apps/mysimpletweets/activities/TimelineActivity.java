@@ -22,7 +22,7 @@ import com.codepath.apps.mysimpletweets.TwitterApplication;
 import com.codepath.apps.mysimpletweets.utils.TwitterClient;
 import com.codepath.apps.mysimpletweets.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.codepath.apps.mysimpletweets.utils.AppStatus;
+import com.codepath.apps.mysimpletweets.utils.NetStatus;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -126,7 +126,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
 
     private void getUserInformation() {
         if ( ( accountInfo == null ) &&
-             ( AppStatus.getInstance(this).isOnline() == true ) ) {
+             ( NetStatus.getInstance(this).isOnline() == true ) ) {
             client.getAccountInformation(new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -147,7 +147,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
      */
     private void getTweets() {
 
-        if ( AppStatus.getInstance(this).isOnline() == true ) {
+        if ( NetStatus.getInstance(this).isOnline() == true ) {
             client.getHomeTimeline(new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
@@ -184,7 +184,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
 
         Log.d("DEBUG", "Getting Older Tweets");
 
-        if ( AppStatus.getInstance(this).isOnline() == true ) {
+        if ( NetStatus.getInstance(this).isOnline() == true ) {
             client.getOlderTweets(oldestId, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
@@ -228,7 +228,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
 
         /* Cannot compose if not online */
         if ( id == R.id.action_compose ) {
-            if ( AppStatus.getInstance(this).isOnline() == true ) {
+            if ( NetStatus.getInstance(this).isOnline() == true ) {
                 composeMessage();
             } else {
                 Toast.makeText(this, R.string.offline_error, Toast.LENGTH_SHORT).show();
