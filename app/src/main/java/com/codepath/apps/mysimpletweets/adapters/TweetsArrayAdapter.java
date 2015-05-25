@@ -13,11 +13,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codepath.apps.mysimpletweets.R;
+import com.codepath.apps.mysimpletweets.TwitterApplication;
 import com.codepath.apps.mysimpletweets.activities.TimelineActivity;
 import com.codepath.apps.mysimpletweets.activities.TweetComposeActivity;
 import com.codepath.apps.mysimpletweets.models.Tweet;
 import com.codepath.apps.mysimpletweets.models.UserAccountInformation;
+import com.codepath.apps.mysimpletweets.utils.TwitterClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
+
+import org.apache.http.Header;
+import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -37,6 +43,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         TextView tvFavCount;
         TextView tvRetweetCount;
         ImageView ivReplyImage;
+        ImageView ivFavImage;
     }
 
     public TweetsArrayAdapter(Context context, List<Tweet> objects) {
@@ -66,6 +73,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
             viewHolder.tvFavCount = (TextView) convertView.findViewById(R.id.tvFavCount);
             viewHolder.tvRetweetCount = (TextView) convertView.findViewById(R.id.tvRetweetCount);
             viewHolder.ivReplyImage = (ImageView) convertView.findViewById(R.id.ivReply);
+            viewHolder.ivFavImage = (ImageView) convertView.findViewById(R.id.ivFav);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -104,6 +112,25 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
                 getContext().startActivity(i);
 
                 Log.d("DEBUG:", info.getScreenName());
+            }
+        });
+
+        viewHolder.ivFavImage.setOnClickListener(new View.OnClickListener() {
+            final TwitterClient client = TwitterApplication.getRestClient();
+            @Override
+            public void onClick(View v) {
+                client.postFavTweet(tweet.getUid(), new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        Log.d("DEBUG:", "Updated Favorites " + response.toString());
+                        ((TimelineActivity) getContext()).onRefresh();
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        Log.d("DEBUG:", "Could not Update Favorites " + errorResponse.toString());
+                    }
+                });
             }
         });
 

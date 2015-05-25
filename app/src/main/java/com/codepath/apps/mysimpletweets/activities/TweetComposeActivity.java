@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.codepath.apps.mysimpletweets.R;
 import com.codepath.apps.mysimpletweets.TwitterApplication;
+import com.codepath.apps.mysimpletweets.models.Tweet;
 import com.codepath.apps.mysimpletweets.models.UserAccountInformation;
 import com.codepath.apps.mysimpletweets.utils.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -27,6 +28,7 @@ public class TweetComposeActivity extends ActionBarActivity {
 
     private Menu menu;
     private UserAccountInformation info;
+    private Tweet tweet;
     MenuItem miRemainingChar;
     /* Used to call the REST APIs */
     private TwitterClient client;
@@ -41,12 +43,12 @@ public class TweetComposeActivity extends ActionBarActivity {
         setContentView(R.layout.activity_tweet_compose);
 
         info = (UserAccountInformation) getIntent().getSerializableExtra("user_info");
+        tweet = (Tweet) getIntent().getSerializableExtra("tweet_detail");
 
         ActionBar actionBar = getSupportActionBar(); // or getActionBar();
-        if ( info != null ) {
-            actionBar.setTitle("@" + info.getScreenName());
 
-        }
+
+        actionBar.setTitle("@" + info.getScreenName());
         client = TwitterApplication.getRestClient();
         setupComposeTweetActivity();
 
@@ -55,6 +57,9 @@ public class TweetComposeActivity extends ActionBarActivity {
 
     private void setupComposeTweetActivity() {
         etTweet = (EditText) findViewById(R.id.etTweetBody);
+        if ( tweet != null ) {
+            etTweet.append("@"+tweet.getUser().getScreenName()+" ");
+        }
         etTweet.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -65,7 +70,7 @@ public class TweetComposeActivity extends ActionBarActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 int textLength = etTweet.getText().length();
                 int remainingCharacters = MAX_TWEET_LENGTH - textLength;
-                miRemainingChar.setTitle("" +remainingCharacters);
+                miRemainingChar.setTitle("" + remainingCharacters);
 
             }
 
@@ -90,25 +95,46 @@ public class TweetComposeActivity extends ActionBarActivity {
 
     private void sendTweet() {
         Log.d("DEBUG", "Sending Tweet");
+
         final Activity parentActivity = this;
-        client.postTweet(etTweet.getText().toString(), new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Log.d("DEBUG", "Post Updated");
-                etTweet.setText("");
 
-                //-- Lets go back to the parent Activity.
-                NavUtils.navigateUpFromSameTask(parentActivity);
+        if (tweet == null ) {
+            client.postTweet(etTweet.getText().toString(), new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    Log.d("DEBUG", "Post Updated");
+                    etTweet.setText("");
 
-            }
+                    //-- Lets go back to the parent Activity.
+                    NavUtils.navigateUpFromSameTask(parentActivity);
+                }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d("DEBUG", errorResponse.toString());
-                Toast.makeText(getApplicationContext(), "Could not post the tweet\n Try Again.", Toast.LENGTH_LONG).show();
-            }
-        });
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    Log.d("DEBUG", errorResponse.toString());
+                    Toast.makeText(getApplicationContext(), "Could not post the tweet\n Try Again.", Toast.LENGTH_LONG).show();
+                }
+            });
+        } else {
+            client.postTweetReply(etTweet.getText().toString(), tweet.getUid(), new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    Log.d("DEBUG", "Reply Updated");
+                    etTweet.setText("");
+
+                    //-- Lets go back to the parent Activity.
+                    NavUtils.navigateUpFromSameTask(parentActivity);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    Log.d("DEBUG", errorResponse.toString());
+                    Toast.makeText(getApplicationContext(), "Could not post the tweet\n Try Again.", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

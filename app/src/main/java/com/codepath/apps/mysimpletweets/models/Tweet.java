@@ -18,9 +18,13 @@ public class Tweet implements Serializable  {
     private int retweetCount;
     private int favoriteCount;
 
+
+    private boolean favorited;
+
     public Tweet() {
         retweetCount = 0;
         favoriteCount = 0;
+        favorited = false;
     }
 
 
@@ -48,6 +52,11 @@ public class Tweet implements Serializable  {
         return favoriteCount;
     }
 
+    public boolean isFavorited() {
+        return favorited;
+    }
+
+
     public static Tweet fromJSON(JSONObject json) {
         Tweet tweet = new Tweet();
 
@@ -71,6 +80,8 @@ public class Tweet implements Serializable  {
                 Log.d("DEBUG:","no favorite count found");
                 tweet.favoriteCount = 0;
             }
+
+            tweet.favorited = json.getBoolean("favorited");
 
         } catch (JSONException e) {
             e.printStackTrace();
