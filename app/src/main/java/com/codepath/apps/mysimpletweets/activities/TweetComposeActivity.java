@@ -18,6 +18,7 @@ import com.codepath.apps.mysimpletweets.TwitterApplication;
 import com.codepath.apps.mysimpletweets.models.Tweet;
 import com.codepath.apps.mysimpletweets.models.UserAccountInformation;
 import com.codepath.apps.mysimpletweets.utils.AppStatus;
+import com.codepath.apps.mysimpletweets.utils.Constants;
 import com.codepath.apps.mysimpletweets.utils.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -42,8 +43,8 @@ public class TweetComposeActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tweet_compose);
 
-        info = (UserAccountInformation) getIntent().getSerializableExtra("user_info");
-        tweet = (Tweet) getIntent().getSerializableExtra("tweet_detail");
+        info = (UserAccountInformation) getIntent().getSerializableExtra(Constants.userInfo);
+        tweet = (Tweet) getIntent().getSerializableExtra(Constants.tweetDetail);
 
         ActionBar actionBar = getSupportActionBar(); // or getActionBar();
 

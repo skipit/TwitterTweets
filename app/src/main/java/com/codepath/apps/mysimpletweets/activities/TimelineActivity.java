@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.activeandroid.query.Select;
 import com.codepath.apps.mysimpletweets.models.UserAccountInformation;
+import com.codepath.apps.mysimpletweets.utils.Constants;
 import com.codepath.apps.mysimpletweets.utils.EndlessScrollListener;
 import com.codepath.apps.mysimpletweets.R;
 import com.codepath.apps.mysimpletweets.adapters.TweetsArrayAdapter;
@@ -112,7 +113,12 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         lvTweets.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Tweet tweet = aTweets.getItem(position);
                 Log.d("DEBUG:","Item clicked at position " + position);
+
+                Intent i = new Intent(TimelineActivity.this, TweetDetailActivity.class);
+                i.putExtra(Constants.tweetDetail, tweet );
+                startActivity(i);
             }
         });
     }
@@ -237,7 +243,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         UserAccountInformation info = accountInfo;
 
         Intent i =  new Intent(TimelineActivity.this, TweetComposeActivity.class);
-        i.putExtra("user_info", info);
+        i.putExtra(Constants.userInfo, info);
         startActivity(i);
     }
 

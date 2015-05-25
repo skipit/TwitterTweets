@@ -1,0 +1,65 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.codepath.apps.mysimpletweets.activities.TweetDetailActivity">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:id="@+id/tweet_detail">
+
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/ivTweetDetailProfileImage"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="#ff83ff2e"
+            android:layout_marginRight="5dp" />
+
+        <TextView
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/user_name"
+            android:id="@+id/tvTweetDetailUserName"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/ivTweetDetailProfileImage"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/tvScreenName"
+            android:id="@+id/tvTweetDetailScreenName"
+            android:layout_below="@+id/tvTweetDetailUserName"
+            android:layout_toRightOf="@+id/ivTweetDetailProfileImage"
+            android:layout_alignStart="@+id/tvTweetDetailUserName"
+            android:layout_alignLeft="@+id/tvTweetDetailUserName"
+            android:layout_toEndOf="@+id/ivTweetDetailProfileImage" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/body"
+            android:id="@+id/tvTweetDetailBody"
+            android:paddingTop="5dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_below="@+id/tvTweetDetailScreenName"
+            android:layout_toRightOf="@+id/ivTweetDetailProfileImage"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Small Text"
+            android:id="@+id/tvTweetDetailSince"
+            android:layout_above="@+id/tvTweetDetailScreenName"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

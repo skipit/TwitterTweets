@@ -55,6 +55,7 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 Describe any challenges encountered while building the app.
 
 * Handling offline cases. There are a lot of cases while handling offline. Which makes it very challenging. I have not addressed all offline-error cases. 
+* Handling autolink. I had implemented Autolink in text view in the adapter, but reverted it to work on other features. 
 
 ## Open-source libraries used
 

@@ -19,6 +19,7 @@ import com.codepath.apps.mysimpletweets.activities.TweetComposeActivity;
 import com.codepath.apps.mysimpletweets.models.Tweet;
 import com.codepath.apps.mysimpletweets.models.UserAccountInformation;
 import com.codepath.apps.mysimpletweets.utils.AppStatus;
+import com.codepath.apps.mysimpletweets.utils.Constants;
 import com.codepath.apps.mysimpletweets.utils.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
@@ -117,8 +118,8 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
                     UserAccountInformation info = ((TimelineActivity) getContext()).getAccountInfo();
                     Log.d("DEBUG:", "Image Clicked");
                     Intent i = new Intent(getContext(), TweetComposeActivity.class);
-                    i.putExtra("user_info", info);
-                    i.putExtra("tweet_detail", (java.io.Serializable) tweet);
+                    i.putExtra(Constants.userInfo, info);
+                    i.putExtra(Constants.tweetDetail, (java.io.Serializable) tweet);
                     getContext().startActivity(i);
 
                     Log.d("DEBUG:", info.getScreenName());

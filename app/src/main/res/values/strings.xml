@@ -13,5 +13,8 @@
     <string name="offline_error">Offline: Cannot perform operation!</string>
     <string name="load_offline">Offline: Home timeline may not be latest!</string>
     <string name="offline_cannot_getmore">Offline: Cannot get older tweets!</string>
+    <string name="title_activity_tweet_detail">Tweet Detail</string>
+
+    <string name="hello_world">Hello world!</string>
 
 </resources>
