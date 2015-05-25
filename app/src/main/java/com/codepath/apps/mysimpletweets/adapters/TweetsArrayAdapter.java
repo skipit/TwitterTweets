@@ -45,6 +45,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         TextView tvRetweetCount;
         ImageView ivReplyImage;
         ImageView ivFavImage;
+        ImageView ivRetweetImage;
     }
 
     public TweetsArrayAdapter(Context context, List<Tweet> objects) {
@@ -75,6 +76,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
             viewHolder.tvRetweetCount = (TextView) convertView.findViewById(R.id.tvRetweetCount);
             viewHolder.ivReplyImage = (ImageView) convertView.findViewById(R.id.ivReply);
             viewHolder.ivFavImage = (ImageView) convertView.findViewById(R.id.ivFav);
+            viewHolder.ivRetweetImage = (ImageView) convertView.findViewById(R.id.ivRetweet);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -138,6 +140,26 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
                         @Override
                         public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                             Log.d("DEBUG:", "Could not Update Favorites " + errorResponse.toString());
+                        }
+                    });
+                }
+            });
+
+            viewHolder.ivRetweetImage.setOnClickListener(new View.OnClickListener() {
+                final TwitterClient client = TwitterApplication.getRestClient();
+
+                @Override
+                public void onClick(View v) {
+                    client.retweet(tweet.getId(), new JsonHttpResponseHandler(){
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            Log.d("DEBUG:", "Retweeted Successfully " + response.toString());
+                            ((TimelineActivity) getContext()).onRefresh();
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                            Log.d("DEBUG:", "Could not retweet " + errorResponse.toString());
                         }
                     });
                 }

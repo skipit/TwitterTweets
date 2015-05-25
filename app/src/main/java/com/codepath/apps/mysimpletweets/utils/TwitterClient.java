@@ -51,6 +51,14 @@ public class TwitterClient extends OAuthBaseClient {
         getClient().get(apiUrl, params, handler);
     }
 
+    public void retweet(long tweetId, AsyncHttpResponseHandler handler ) {
+        String apiUrl = getApiUrl("statuses/retweet/:id.json");
+        RequestParams params = new RequestParams();
+        params.put("id", tweetId);
+        getClient().get(apiUrl, params, handler);
+
+    }
+
     /**
      * Utility to get account details
      *
