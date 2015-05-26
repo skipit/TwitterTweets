@@ -85,7 +85,7 @@ public class TwitterClient extends OAuthBaseClient {
         getClient().post(apiUrl, params, handler);
     }
 
-    public void postFavTweet(boolean favoriteStatus, long FavTweet, AsyncHttpResponseHandler handler ) {
+    public void postFavTweet(boolean favoriteStatus, long favTweet, AsyncHttpResponseHandler handler ) {
         String apiUrl;
         if ( favoriteStatus == false ) {
             apiUrl = getApiUrl("favorites/create.json");
@@ -93,9 +93,17 @@ public class TwitterClient extends OAuthBaseClient {
             apiUrl = getApiUrl("favorites/destroy.json");
         }
         RequestParams params = new RequestParams();
-        params.put("id", FavTweet);
+        params.put("id", favTweet);
         getClient().post(apiUrl, params, handler);
     }
+
+    public void getTweetInfo(long tweetId, AsyncHttpResponseHandler handler ) {
+        String apiUrl = getApiUrl("statuses/show.json");
+        RequestParams params = new RequestParams();
+        params.put("id", tweetId);
+        getClient().post(apiUrl, params, handler);
+    }
+
 	/* 1. Define the endpoint URL with getApiUrl and pass a relative path to the endpoint
 	 * 	  i.e getApiUrl("statuses/home_timeline.json");
 	 * 2. Define the parameters to pass to the request (query or body)

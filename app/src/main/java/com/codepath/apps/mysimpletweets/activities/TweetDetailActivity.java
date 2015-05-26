@@ -19,6 +19,12 @@ public class TweetDetailActivity extends ActionBarActivity {
         setContentView(R.layout.activity_tweet_detail);
 
         tweet = (Tweet) getIntent().getSerializableExtra(Constants.tweetDetail);
+
+        getTweetInfo(tweet);
+    }
+
+    private void getTweetInfo(Tweet tweet) {
+        
     }
 
 
