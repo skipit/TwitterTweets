@@ -24,7 +24,7 @@ public class TweetDetailActivity extends ActionBarActivity {
     }
 
     private void getTweetInfo(Tweet tweet) {
-        
+
     }
 
 
