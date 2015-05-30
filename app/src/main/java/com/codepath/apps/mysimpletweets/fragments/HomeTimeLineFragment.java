@@ -120,6 +120,7 @@ public class HomeTimeLineFragment extends TweetsListFragment {
 
     @Override
     public void loadMore() {
+        Log.d("DEBUG:", "HomeTimeline loadMore() called");
         getOlderTweets();
     }
 }

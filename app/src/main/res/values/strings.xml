@@ -17,5 +17,9 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_profile">Profile</string>
+    <string name="tvTagLine">Tag line....</string>
+    <string name="tvTweets">Tweets</string>
+    <string name="tvFollowing">Following</string>
+    <string name="tvFollowers">Followers</string>
 
 </resources>

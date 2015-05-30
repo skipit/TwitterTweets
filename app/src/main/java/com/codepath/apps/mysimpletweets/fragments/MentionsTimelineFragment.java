@@ -113,6 +113,7 @@ public class MentionsTimelineFragment extends TweetsListFragment {
 
     @Override
     public void loadMore() {
+        Log.d("DEBUG:", "MentionsTimeline loadMore() called");
         getMentionsOlderTweets();
     }
 }

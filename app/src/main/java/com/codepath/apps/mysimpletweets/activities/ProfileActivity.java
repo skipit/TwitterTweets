@@ -1,13 +1,17 @@
 package com.codepath.apps.mysimpletweets.activities;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.codepath.apps.mysimpletweets.R;
 import com.codepath.apps.mysimpletweets.TwitterApplication;
+import com.codepath.apps.mysimpletweets.fragments.UserTimelineFragment;
 import com.codepath.apps.mysimpletweets.models.UserAccountInformation;
 import com.codepath.apps.mysimpletweets.utils.Constants;
 import com.codepath.apps.mysimpletweets.utils.TwitterClient;
@@ -28,6 +32,31 @@ public class ProfileActivity extends ActionBarActivity {
 
         client = TwitterApplication.getRestClient();
 
+        setupUserTimelineActivity(savedInstanceState);
+        populateProfileHeader();
+    }
+
+    private void populateProfileHeader() {
+        TextView tvUserName = (TextView)findViewById(R.id.tvProfileName);
+        TextView tvScreenName = (TextView) findViewById(R.id.tvProfileScreenName);
+        TextView tvTagLine = (TextView) findViewById(R.id.tvTagLine);
+        TextView tvTweetCount = (TextView) findViewById(R.id.tvTweetValue);
+        TextView tvFollowerCount = (TextView) findViewById(R.id.tvFollowerValue);
+        TextView tvFollowingCount = (TextView) findViewById(R.id.tvFollowingValue);
+        ImageView ivProfileImage = (ImageView) findViewById(R.id.ivProfileActImage);
+
+
+
+    }
+
+    private void setupUserTimelineActivity(Bundle savedInstanceState) {
+
+        if ( savedInstanceState == null ) {
+            UserTimelineFragment fragmentUserTimeline = UserTimelineFragment.Instance(userInfo);
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.flContainer, fragmentUserTimeline);
+            ft.commit();
+        }
     }
 
 

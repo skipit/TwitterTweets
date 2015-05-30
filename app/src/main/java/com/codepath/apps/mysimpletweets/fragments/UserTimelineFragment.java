@@ -110,6 +110,7 @@ public class UserTimelineFragment extends TweetsListFragment {
 
     @Override
     public void loadMore() {
+        Log.d("DEBUG:", "UserTimeline loadMore() called");
         getOlderUserTimeline();
     }
 }

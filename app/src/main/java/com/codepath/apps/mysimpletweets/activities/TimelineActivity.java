@@ -110,7 +110,7 @@ public class TimelineActivity extends ActionBarActivity {
     }
 
     private void showProfileInfo() {
-        Intent i = new Intent(this, ProfileActivity.class);
+        Intent i = new Intent(TimelineActivity.this, ProfileActivity.class);
         i.putExtra(Constants.userInfo, userInfo);
         startActivity(i);
     }
