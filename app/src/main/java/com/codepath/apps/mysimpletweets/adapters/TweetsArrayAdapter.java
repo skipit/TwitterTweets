@@ -3,6 +3,7 @@ package com.codepath.apps.mysimpletweets.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,11 +45,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         ImageView ivRetweetImage;
     }
 
-    public TweetsArrayAdapter(Context context, List<Tweet> objects) {
-        super(context, android.R.layout.simple_list_item_1, objects);
-    }
-
-    public TweetsArrayAdapter(Context context, int resource, List<Tweet> objects) {
+     public TweetsArrayAdapter(Context context, int resource, List<Tweet> objects) {
         super(context, resource, objects);
     }
 
@@ -105,6 +102,12 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
             viewHolder.ivFavImage.setImageResource(R.drawable.ic_fav);
         }
 
+        if (tweet.isRetweeted()) {
+            viewHolder.ivRetweetImage.setImageResource(R.drawable.ic_retweeted );
+        } else {
+            viewHolder.ivRetweetImage.setImageResource(R.drawable.ic_retweet);
+        }
+
         /* Do not set OnClickListeners if offline */
         if (NetStatus.getInstance(getContext()).isOnline() == true ) {
             viewHolder.ivReplyImage.setOnClickListener(new View.OnClickListener() {
@@ -146,7 +149,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
 
                 @Override
                 public void onClick(View v) {
-                    client.retweet(tweet.getId(), new JsonHttpResponseHandler(){
+                    client.retweet(tweet.isRetweeted(), tweet.getId(), new JsonHttpResponseHandler(){
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             Log.d("DEBUG:", "Retweeted Successfully " + response.toString());
@@ -156,6 +159,11 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
                         @Override
                         public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                             Log.d("DEBUG:", "Could not retweet " + errorResponse.toString());
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                            Log.d("DEBUG:", "Could not retweet " + responseString);
                         }
                     });
                 }

@@ -26,7 +26,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TweetsListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public abstract class TweetsListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
 
     /* Holds the tweets and adapts it to the ListView */
@@ -36,7 +36,7 @@ public class TweetsListFragment extends Fragment implements SwipeRefreshLayout.O
 
 
     /* The Handle to the SwipeRefresh */
-    private SwipeRefreshLayout swipeContainer;
+    protected SwipeRefreshLayout swipeContainer;
 
     public interface RefreshListListener {
         void onRefresh();
@@ -92,8 +92,7 @@ public class TweetsListFragment extends Fragment implements SwipeRefreshLayout.O
         lvTweets.setOnScrollListener(new EndlessScrollListener() {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
-                LoadMoreItemListener listener = (LoadMoreItemListener) getActivity();
-                listener.onLoadMore();
+                loadMore();
             }
         });
 
@@ -110,7 +109,6 @@ public class TweetsListFragment extends Fragment implements SwipeRefreshLayout.O
         });
     }
 
-
     public void addAll(List<Tweet> tweets, boolean clear ) {
 
         if ( true == clear ) {
@@ -124,13 +122,5 @@ public class TweetsListFragment extends Fragment implements SwipeRefreshLayout.O
         return aTweets.getItem(aTweets.getCount() - 1).getUid();
     }
 
-    @Override
-    public void onRefresh() {
-        RefreshListListener listener = (RefreshListListener) getActivity();
-
-        listener.onRefresh();
-        // Notify the Container that refresh has completed
-        swipeContainer.setRefreshing(false);
-    }
-
+    public abstract void loadMore();
 }

@@ -31,12 +31,15 @@ public class Tweet extends Model implements Serializable  {
     private int favoriteCount;
     @Column(name = "Favorited")
     private boolean favorited;
+    @Column(name="Retweeted")
+    private boolean retweeted;
 
     public Tweet() {
         super();
         retweetCount = 0;
         favoriteCount = 0;
         favorited = false;
+        retweeted = false;
 
     }
 
@@ -69,6 +72,10 @@ public class Tweet extends Model implements Serializable  {
         return favorited;
     }
 
+    public boolean isRetweeted() {
+        return retweeted;
+    }
+
     public List<Tweet> tweets() {
         return getMany(Tweet.class, "Tweet");
     }
@@ -98,6 +105,7 @@ public class Tweet extends Model implements Serializable  {
             }
 
             tweet.favorited = json.getBoolean("favorited");
+            tweet.retweeted = json.getBoolean("retweeted");
 
             // TODO: Temporary Location to save tweet.
             tweet.save();
