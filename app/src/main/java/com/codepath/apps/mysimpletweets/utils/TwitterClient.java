@@ -56,11 +56,11 @@ public class TwitterClient extends OAuthBaseClient {
 
         String apiUrl;
 
-        if ( retweetStatus == false ) {
+        //if ( retweetStatus == false ) {
             apiUrl = getApiUrl("statuses/retweet/"+tweetId+".json");
-        } else {
+        //} else {
             //TODO: End Point to undo Retweetß
-        }
+        //}
         //RequestParams params = new RequestParams();
         //params.put("id", tweetId);
         getClient().post(apiUrl, handler);
