@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.activeandroid.query.Select;
+import com.codepath.apps.mysimpletweets.fragments.TweetsListFragment;
 import com.codepath.apps.mysimpletweets.models.UserAccountInformation;
 import com.codepath.apps.mysimpletweets.utils.Constants;
 import com.codepath.apps.mysimpletweets.utils.EndlessScrollListener;
@@ -31,102 +32,52 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TimelineActivity extends ActionBarActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class TimelineActivity extends ActionBarActivity implements TweetsListFragment.RefreshListListener, TweetsListFragment.LoadMoreItemListener {
+
+
+    /* Tracks the oldest tweet-ID that was received */
+    private long oldestId;
 
     /* Used to call the REST APIs */
     private TwitterClient client;
 
-    /* Holds the tweets and adapts it to the ListView */
-    private ArrayList<Tweet> tweets;
-    private TweetsArrayAdapter aTweets;
-    private ListView lvTweets;
-
     private UserAccountInformation accountInfo;
 
-    /* The Handle to the SwipeRefresh */
-    private SwipeRefreshLayout swipeContainer;
-
-    /* Tracks the oldest tweet-ID that was received */
-    private long oldestId;
+    private TweetsListFragment fragmentTweetsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
 
-        setupSwipeContainer();
-        setupTweetListView();
-
         client = TwitterApplication.getRestClient();
         getUserInformation();
-    }
 
-    @Override
-    protected void onResume() {
-        loadOfflineTweets();
+
+        /* If not null, the fragment is already inflated in memory */
+        if (savedInstanceState == null) {
+            fragmentTweetsList = (TweetsListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_timeline);
+        }
+
         getTweets();
-        super.onResume();
-    }
-
-    private void loadOfflineTweets() {
-        Log.d("DEBUG:", "Loading Tweets from Offline Database");
-        // Query ActiveAndroid for list of data
-        List<Tweet> queryResults = new Select().from(Tweet.class)
-                .orderBy("TweetUID DESC").execute();
-        aTweets.addAll(queryResults);
     }
 
     public UserAccountInformation getAccountInfo() {
         return accountInfo;
     }
 
-    public void setupSwipeContainer() {
-        //// Set up the Swipe Container
-        //Get the Swipe Container
-        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
-        //Set the Listener
-        swipeContainer.setOnRefreshListener(this);
-        // Configure the refreshing colors
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
+
+    private void loadOfflineTweets() {
+        Log.d("DEBUG:", "Loading Tweets from Offline Database");
+        // Query ActiveAndroid for list of data
+        List<Tweet> queryResults = new Select().from(Tweet.class)
+                .orderBy("TweetUID DESC").execute();
+        fragmentTweetsList.addAll(queryResults, true);
     }
-
-    /**
-     * Initialize the tweets ArrayList, and set the adapter and the scroll listeners
-     */
-    private void setupTweetListView() {
-        lvTweets = (ListView) findViewById(R.id.lvTweets);
-        tweets = new ArrayList<Tweet>();
-        aTweets = new TweetsArrayAdapter(this, R.layout.item_tweet, tweets);
-        lvTweets.setAdapter(aTweets);
-
-
-        lvTweets.setOnScrollListener(new EndlessScrollListener() {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount) {
-                getOlderTweets();
-            }
-        });
-
-        lvTweets.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Tweet tweet = aTweets.getItem(position);
-                Log.d("DEBUG:","Item clicked at position " + position);
-
-                Intent i = new Intent(TimelineActivity.this, TweetDetailActivity.class);
-                i.putExtra(Constants.tweetDetail, tweet );
-                startActivity(i);
-            }
-        });
-    }
-
 
     private void getUserInformation() {
         if ( ( accountInfo == null ) &&
-             ( NetStatus.getInstance(this).isOnline() == true ) ) {
+                ( NetStatus.getInstance(this).isOnline() == true ) ) {
             client.getAccountInformation(new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -142,6 +93,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         }
     }
 
+
     /**
      * Utility function to get the first set of tweets
      */
@@ -155,11 +107,9 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
 
                     ArrayList<Tweet> tweets = Tweet.fromJSONArray(response);
 
-                    aTweets.clear(); /* Clear the items in the array to reload */
-                    aTweets.addAll(tweets);
+                    fragmentTweetsList.addAll(tweets, true);
 
-
-                    oldestId = aTweets.getItem(aTweets.getCount() - 1).getUid();
+                    oldestId = fragmentTweetsList.getOldestTweetItemId();
                     Log.d("DEBUG:", "OldestID=" + oldestId);
                 }
 
@@ -170,10 +120,9 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
             });
         }else {
             Toast.makeText(this, R.string.load_offline, Toast.LENGTH_SHORT).show();
-            aTweets.clear();
             List<Tweet> queryResults = new Select().from(Tweet.class)
                     .orderBy("TweetUid").limit(100).execute();
-            aTweets.addAll(queryResults);
+            fragmentTweetsList.addAll(queryResults, true);
         }
     }
 
@@ -191,9 +140,9 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
                     Log.d("DEBUG", response.toString());
 
                     ArrayList<Tweet> tweets = Tweet.fromJSONArray(response);
-                    aTweets.addAll(tweets);
+                    fragmentTweetsList.addAll(tweets, false);
 
-                    oldestId = aTweets.getItem(aTweets.getCount() - 1).getUid();
+                    oldestId = fragmentTweetsList.getOldestTweetItemId();
                     Log.d("DEBUG:", "OldestID=" + oldestId);
                 }
 
@@ -206,6 +155,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
             Toast.makeText(this, R.string.offline_cannot_getmore, Toast.LENGTH_SHORT).show();
         }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -250,10 +200,12 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     @Override
     public void onRefresh() {
         getTweets();
-        // Notify the Container that refresh has completed
-        swipeContainer.setRefreshing(false);
     }
 
+    @Override
+    public void onLoadMore() {
+        getOlderTweets();
+    }
 
 
 }
