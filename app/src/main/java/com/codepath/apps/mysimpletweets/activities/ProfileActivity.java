@@ -1,18 +1,33 @@
 package com.codepath.apps.mysimpletweets.activities;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.codepath.apps.mysimpletweets.R;
+import com.codepath.apps.mysimpletweets.TwitterApplication;
+import com.codepath.apps.mysimpletweets.models.UserAccountInformation;
+import com.codepath.apps.mysimpletweets.utils.Constants;
+import com.codepath.apps.mysimpletweets.utils.TwitterClient;
 
 public class ProfileActivity extends ActionBarActivity {
+
+    private UserAccountInformation userInfo;
+    private TwitterClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        userInfo = (UserAccountInformation) getIntent().getSerializableExtra(Constants.userInfo);
+        ActionBar actionBar = getSupportActionBar(); // or getActionBar();
+        actionBar.setTitle("@" + userInfo.getScreenName());
+
+        client = TwitterApplication.getRestClient();
+
     }
 
 

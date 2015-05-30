@@ -28,7 +28,7 @@ import org.json.JSONObject;
 public class TweetComposeActivity extends ActionBarActivity {
 
     private Menu menu;
-    private UserAccountInformation info;
+    private UserAccountInformation userInfo;
     private Tweet tweet;
     MenuItem miRemainingChar;
     /* Used to call the REST APIs */
@@ -43,13 +43,11 @@ public class TweetComposeActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tweet_compose);
 
-        info = (UserAccountInformation) getIntent().getSerializableExtra(Constants.userInfo);
+        userInfo = (UserAccountInformation) getIntent().getSerializableExtra(Constants.userInfo);
         tweet = (Tweet) getIntent().getSerializableExtra(Constants.tweetDetail);
 
         ActionBar actionBar = getSupportActionBar(); // or getActionBar();
-
-
-        actionBar.setTitle("@" + info.getScreenName());
+        actionBar.setTitle("@" + userInfo.getScreenName());
         client = TwitterApplication.getRestClient();
         setupComposeTweetActivity();
 

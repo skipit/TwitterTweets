@@ -32,7 +32,7 @@ public class TimelineActivity extends ActionBarActivity {
     /* Used to call the REST APIs */
     private TwitterClient client;
 
-    private UserAccountInformation accountInfo;
+    private UserAccountInformation userInfo;
 
     private ViewPager viewPager;
 
@@ -57,19 +57,14 @@ public class TimelineActivity extends ActionBarActivity {
 
     }
 
-    public UserAccountInformation getAccountInfo() {
-
-        return accountInfo;
-    }
-
     private void getUserInformation() {
-        if ((accountInfo == null) &&
+        if ((userInfo == null) &&
                 (NetStatus.getInstance(this).isOnline() == true)) {
             client.getUserInfo(new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     Log.d("DEBUG", response.toString());
-                    accountInfo = UserAccountInformation.fromJSONObject(response);
+                    userInfo = UserAccountInformation.fromJSONObject(response);
                 }
 
                 @Override
@@ -116,14 +111,13 @@ public class TimelineActivity extends ActionBarActivity {
 
     private void showProfileInfo() {
         Intent i = new Intent(this, ProfileActivity.class);
+        i.putExtra(Constants.userInfo, userInfo);
         startActivity(i);
     }
 
     private void composeMessage() {
-        UserAccountInformation info = accountInfo;
-
         Intent i = new Intent(TimelineActivity.this, TweetComposeActivity.class);
-        i.putExtra(Constants.userInfo, info);
+        i.putExtra(Constants.userInfo, userInfo);
         startActivity(i);
     }
 
@@ -145,13 +139,13 @@ public class TimelineActivity extends ActionBarActivity {
                 default:
                 case 0:
                     if (homeTimeLineFragment == null) {
-                        homeTimeLineFragment = HomeTimeLineFragment.Instance(accountInfo);
+                        homeTimeLineFragment = HomeTimeLineFragment.Instance(userInfo);
                     }
                     return homeTimeLineFragment;
 
                 case 1:
                     if (mentionsTimelineFragment == null) {
-                        mentionsTimelineFragment = MentionsTimelineFragment.Instance(accountInfo);
+                        mentionsTimelineFragment = MentionsTimelineFragment.Instance(userInfo);
                     }
 
                     return mentionsTimelineFragment;
