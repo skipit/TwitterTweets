@@ -3,7 +3,6 @@ package com.codepath.apps.mysimpletweets.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +17,8 @@ import com.codepath.apps.mysimpletweets.activities.TimelineActivity;
 import com.codepath.apps.mysimpletweets.activities.TweetComposeActivity;
 import com.codepath.apps.mysimpletweets.models.Tweet;
 import com.codepath.apps.mysimpletweets.models.UserAccountInformation;
-import com.codepath.apps.mysimpletweets.utils.NetStatus;
 import com.codepath.apps.mysimpletweets.utils.Constants;
+import com.codepath.apps.mysimpletweets.utils.NetStatus;
 import com.codepath.apps.mysimpletweets.utils.Transform;
 import com.codepath.apps.mysimpletweets.utils.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -33,6 +32,8 @@ import java.util.List;
 public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
 
     private OnRefreshListener onRefreshListener;
+    private UserAccountInformation userInfo;
+
 
     private static class ViewHolder {
         ImageView ivProfileImage;
@@ -51,11 +52,13 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         public void tweetDataSetChangedNotify();
     }
 
-     public TweetsArrayAdapter(Context context, int resource, List<Tweet> objects) {
+    public TweetsArrayAdapter(Context context, int resource, List<Tweet> objects, UserAccountInformation userInfo ) {
         super(context, resource, objects);
+
+        this.userInfo = userInfo;
     }
 
-    public void setOnRefreshListener (OnRefreshListener listener ) {
+    public void setOnRefreshListener(OnRefreshListener listener) {
         this.onRefreshListener = listener;
     }
 
@@ -64,7 +67,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         final Tweet tweet = getItem(position);
 
         ViewHolder viewHolder;
-        if ( convertView == null ) {
+        if (convertView == null) {
             viewHolder = new ViewHolder();
 
             convertView = LayoutInflater.from(getContext())
@@ -86,18 +89,18 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         }
 
         viewHolder.tvUserName.setText(tweet.getUser().getName());
-        viewHolder.tvScreenName.setText("@"+tweet.getUser().getScreenName());
+        viewHolder.tvScreenName.setText("@" + tweet.getUser().getScreenName());
         viewHolder.tvBody.setText(tweet.getBody());
         viewHolder.tvSince.setText(Transform.getRelativeTimeAgo(tweet.getCreatedAt()));
         viewHolder.ivProfileImage.setImageResource(android.R.color.transparent);
-        if ( tweet.getFavoriteCount() > 0 ) {
-            viewHolder.tvFavCount.setText(""+tweet.getFavoriteCount());
+        if (tweet.getFavoriteCount() > 0) {
+            viewHolder.tvFavCount.setText("" + tweet.getFavoriteCount());
         } else {
             viewHolder.tvFavCount.setText("0");
         }
 
-        if ( tweet.getRetweetCount() > 0 ) {
-            viewHolder.tvRetweetCount.setText(""+tweet.getRetweetCount());
+        if (tweet.getRetweetCount() > 0) {
+            viewHolder.tvRetweetCount.setText("" + tweet.getRetweetCount());
         } else {
             viewHolder.tvRetweetCount.setText("0");
         }
@@ -107,30 +110,29 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
                 .into(viewHolder.ivProfileImage);
 
         if (tweet.isFavorited()) {
-            viewHolder.ivFavImage.setImageResource(R.drawable.ic_fav_favorited );
+            viewHolder.ivFavImage.setImageResource(R.drawable.ic_fav_favorited);
         } else {
             viewHolder.ivFavImage.setImageResource(R.drawable.ic_fav);
         }
 
         if (tweet.isRetweeted()) {
-            viewHolder.ivRetweetImage.setImageResource(R.drawable.ic_retweeted );
+            viewHolder.ivRetweetImage.setImageResource(R.drawable.ic_retweeted);
         } else {
             viewHolder.ivRetweetImage.setImageResource(R.drawable.ic_retweet);
         }
 
         /* Do not set OnClickListeners if offline */
-        if (NetStatus.getInstance(getContext()).isOnline() == true ) {
+        if (NetStatus.getInstance(getContext()).isOnline() == true) {
             viewHolder.ivReplyImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    UserAccountInformation info = ((TimelineActivity) getContext()).getAccountInfo();
                     Log.d("DEBUG:", "Image Clicked");
                     Intent i = new Intent(getContext(), TweetComposeActivity.class);
-                    i.putExtra(Constants.userInfo, info);
+                    i.putExtra(Constants.userInfo, userInfo);
                     i.putExtra(Constants.tweetDetail, (java.io.Serializable) tweet);
                     getContext().startActivity(i);
 
-                    Log.d("DEBUG:", info.getScreenName());
+                    Log.d("DEBUG:", userInfo.getScreenName());
                 }
             });
 
@@ -159,7 +161,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
 
                 @Override
                 public void onClick(View v) {
-                    client.retweet(tweet.isRetweeted(), tweet.getUid(), new JsonHttpResponseHandler(){
+                    client.retweet(tweet.isRetweeted(), tweet.getUid(), new JsonHttpResponseHandler() {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             Log.d("DEBUG:", "Retweeted Successfully " + response.toString());
@@ -182,7 +184,6 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
 
         return convertView;
     }
-
 
 
 }

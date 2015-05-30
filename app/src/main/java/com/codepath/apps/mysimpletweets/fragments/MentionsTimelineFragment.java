@@ -9,6 +9,7 @@ import com.activeandroid.query.Select;
 import com.codepath.apps.mysimpletweets.R;
 import com.codepath.apps.mysimpletweets.TwitterApplication;
 import com.codepath.apps.mysimpletweets.models.Tweet;
+import com.codepath.apps.mysimpletweets.models.UserAccountInformation;
 import com.codepath.apps.mysimpletweets.utils.NetStatus;
 import com.codepath.apps.mysimpletweets.utils.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -24,15 +25,21 @@ public class MentionsTimelineFragment extends TweetsListFragment {
     /* Tracks the oldest tweet-ID that was received */
     private long oldestId;
 
-    /* Used to call the REST APIs */
-    private TwitterClient client;
+
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        client = TwitterApplication.getRestClient();
         getMentionsTweets();
+    }
+
+    public static MentionsTimelineFragment Instance(UserAccountInformation info) {
+        MentionsTimelineFragment fragment = new MentionsTimelineFragment();
+        Bundle args = new Bundle();
+        args.putSerializable("user_info", info);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     /**
@@ -40,7 +47,7 @@ public class MentionsTimelineFragment extends TweetsListFragment {
      */
     private void getMentionsTweets() {
 
-        if ( NetStatus.getInstance(getActivity()).isOnline() == true ) {
+        if (NetStatus.getInstance(getActivity()).isOnline() == true) {
             client.getMentionsTimeline(new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
@@ -59,7 +66,7 @@ public class MentionsTimelineFragment extends TweetsListFragment {
                     Log.d("DEBUG", errorResponse.toString());
                 }
             });
-        }else {
+        } else {
             Toast.makeText(getActivity(), R.string.load_offline, Toast.LENGTH_SHORT).show();
             List<Tweet> queryResults = new Select().from(Tweet.class)
                     .orderBy("TweetUid").limit(100).execute();
@@ -70,11 +77,11 @@ public class MentionsTimelineFragment extends TweetsListFragment {
     /**
      * Method to get older tweets to allow for infinite pagination
      */
-    private void getMentionsOlderTweets () {
+    private void getMentionsOlderTweets() {
 
         Log.d("DEBUG", "Getting Older Tweets");
 
-        if ( NetStatus.getInstance(getActivity()).isOnline() == true ) {
+        if (NetStatus.getInstance(getActivity()).isOnline() == true) {
             client.getMentionsOlderTweets(oldestId, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {

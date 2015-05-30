@@ -16,5 +16,6 @@
     <string name="title_activity_tweet_detail">Tweet Detail</string>
 
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_profile">Profile</string>
 
 </resources>

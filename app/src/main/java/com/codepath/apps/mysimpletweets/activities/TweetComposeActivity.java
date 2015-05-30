@@ -1,10 +1,10 @@
 package com.codepath.apps.mysimpletweets.activities;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -17,8 +17,8 @@ import com.codepath.apps.mysimpletweets.R;
 import com.codepath.apps.mysimpletweets.TwitterApplication;
 import com.codepath.apps.mysimpletweets.models.Tweet;
 import com.codepath.apps.mysimpletweets.models.UserAccountInformation;
-import com.codepath.apps.mysimpletweets.utils.NetStatus;
 import com.codepath.apps.mysimpletweets.utils.Constants;
+import com.codepath.apps.mysimpletweets.utils.NetStatus;
 import com.codepath.apps.mysimpletweets.utils.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -58,7 +58,7 @@ public class TweetComposeActivity extends ActionBarActivity {
 
     private void setupComposeTweetActivity() {
         etTweet = (EditText) findViewById(R.id.etTweetBody);
-        if ( tweet != null ) {
+        if (tweet != null) {
             etTweet.append("@" + tweet.getUser().getScreenName() + " ");
         }
         etTweet.addTextChangedListener(new TextWatcher() {
@@ -98,7 +98,7 @@ public class TweetComposeActivity extends ActionBarActivity {
 
         final Activity parentActivity = this;
 
-        if (tweet == null ) {
+        if (tweet == null) {
             client.postTweet(etTweet.getText().toString(), new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -148,8 +148,8 @@ public class TweetComposeActivity extends ActionBarActivity {
             return true;
         }
 
-        if ( id == R.id.action_send ) {
-            if (NetStatus.getInstance(this).isOnline() == true ) {
+        if (id == R.id.action_send) {
+            if (NetStatus.getInstance(this).isOnline() == true) {
                 sendTweet();
             } else {
                 Toast.makeText(this, R.string.offline_error, Toast.LENGTH_SHORT).show();

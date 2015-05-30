@@ -1,8 +1,6 @@
 package com.codepath.apps.mysimpletweets.models;
 
 
-import com.activeandroid.Model;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,6 +10,7 @@ public class UserAccountInformation implements Serializable {
 
 
     private String screenName;
+
 
     public String getScreenName() {
         return screenName;

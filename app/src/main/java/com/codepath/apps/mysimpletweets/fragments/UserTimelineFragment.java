@@ -21,41 +21,31 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeTimeLineFragment extends TweetsListFragment {
-
+public class UserTimelineFragment extends TweetsListFragment {
     /* Tracks the oldest tweet-ID that was received */
     private long oldestId;
-
-
-    public static HomeTimeLineFragment Instance(UserAccountInformation info) {
-        HomeTimeLineFragment fragment = new HomeTimeLineFragment();
-        Bundle args = new Bundle();
-        args.putSerializable("user_info", info);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getTweets();
+        getUserTimeline();
     }
 
-    private void loadOfflineTweets() {
-        Log.d("DEBUG:", "Loading Tweets from Offline Database");
-        // Query ActiveAndroid for list of data
-        List<Tweet> queryResults = new Select().from(Tweet.class)
-                .orderBy("TweetUID DESC").execute();
-        addAll(queryResults, true);
+    public static UserTimelineFragment Instance(UserAccountInformation info) {
+        UserTimelineFragment userFragment = new UserTimelineFragment();
+        Bundle args = new Bundle();
+        args.putSerializable("user_info", info);
+        userFragment.setArguments(args);
+        return userFragment;
     }
 
     /**
      * Utility function to get the first set of tweets
      */
-    private void getTweets() {
+    private void getUserTimeline() {
 
         if (NetStatus.getInstance(getActivity()).isOnline() == true) {
-            client.getHomeTimeline(new JsonHttpResponseHandler() {
+            client.getUserTimeline(userInfo.getScreenName(), new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                     Log.d("DEBUG", response.toString());
@@ -84,12 +74,12 @@ public class HomeTimeLineFragment extends TweetsListFragment {
     /**
      * Method to get older tweets to allow for infinite pagination
      */
-    private void getOlderTweets() {
+    private void getOlderUserTimeline() {
 
         Log.d("DEBUG", "Getting Older Tweets");
 
         if (NetStatus.getInstance(getActivity()).isOnline() == true) {
-            client.getOlderTweets(oldestId, new JsonHttpResponseHandler() {
+            client.getOlderUserTimeline(userInfo.getScreenName(), oldestId, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                     Log.d("DEBUG", response.toString());
@@ -113,13 +103,14 @@ public class HomeTimeLineFragment extends TweetsListFragment {
 
     @Override
     public void onRefresh() {
-        getTweets();
+        getUserTimeline();
         // Notify the Container that refresh has completed
         swipeContainer.setRefreshing(false);
     }
 
     @Override
     public void loadMore() {
-        getOlderTweets();
+        getOlderUserTimeline();
     }
 }
+

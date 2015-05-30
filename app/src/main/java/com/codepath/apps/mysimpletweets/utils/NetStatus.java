@@ -1,7 +1,6 @@
-
-
 /* Copied From Stack Overflow @ http://stackoverflow.com/questions/4238921/detect-whether-there-is-an-internet-connection-available-on-android*/
 package com.codepath.apps.mysimpletweets.utils;
+
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;

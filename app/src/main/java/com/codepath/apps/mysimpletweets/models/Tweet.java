@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Table(name = "Tweets")
-public class Tweet extends Model implements Serializable  {
+public class Tweet extends Model implements Serializable {
     @Column(name = "TweetUid", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     private long uid;
     @Column(name = "Body")
@@ -31,7 +31,7 @@ public class Tweet extends Model implements Serializable  {
     private int favoriteCount;
     @Column(name = "Favorited")
     private boolean favorited;
-    @Column(name="Retweeted")
+    @Column(name = "Retweeted")
     private boolean retweeted;
 
     public Tweet() {
@@ -92,7 +92,7 @@ public class Tweet extends Model implements Serializable  {
             tweet.createdAt = json.getString("created_at");
             try {
                 tweet.retweetCount = json.getInt("retweet_count");
-            } catch (JSONException e){
+            } catch (JSONException e) {
                 Log.d("DEBUG:", "no retweet count found");
                 tweet.retweetCount = 0;
             }
@@ -100,7 +100,7 @@ public class Tweet extends Model implements Serializable  {
             try {
                 tweet.favoriteCount = json.getInt("favorite_count");
             } catch (JSONException e) {
-                Log.d("DEBUG:","no favorite count found");
+                Log.d("DEBUG:", "no favorite count found");
                 tweet.favoriteCount = 0;
             }
 
@@ -122,13 +122,13 @@ public class Tweet extends Model implements Serializable  {
         ArrayList<Tweet> tweets = new ArrayList<>();
 
 
-        for ( int i = 0; i < jsonArray.length(); i ++ ) {
+        for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject tweetJson = null;
             try {
                 tweetJson = jsonArray.getJSONObject(i);
                 Tweet tweet = Tweet.fromJSON(tweetJson);
 
-                if ( tweet != null ) {
+                if (tweet != null) {
                     tweets.add(tweet);
                 }
             } catch (JSONException e) {

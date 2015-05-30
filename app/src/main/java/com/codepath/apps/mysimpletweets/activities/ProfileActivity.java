@@ -6,32 +6,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.codepath.apps.mysimpletweets.R;
-import com.codepath.apps.mysimpletweets.models.Tweet;
-import com.codepath.apps.mysimpletweets.utils.Constants;
 
-public class TweetDetailActivity extends ActionBarActivity {
-
-    private Tweet tweet;
+public class ProfileActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tweet_detail);
-
-        tweet = (Tweet) getIntent().getSerializableExtra(Constants.tweetDetail);
-
-        getTweetInfo(tweet);
-    }
-
-    private void getTweetInfo(Tweet tweet) {
-
+        setContentView(R.layout.activity_profile);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_tweet_detail, menu);
+        getMenuInflater().inflate(R.menu.menu_profile, menu);
         return true;
     }
 

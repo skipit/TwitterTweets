@@ -4,14 +4,16 @@
     tools:context="com.codepath.apps.mysimpletweets.activities.TweetComposeActivity">
     <!--<item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="never" />-->
-    <item android:id="@+id/tweet_length" android:title="123"
+    <item
+        android:id="@+id/tweet_length"
         android:orderInCategory="50"
+        android:title="123"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_send"
         android:icon="@drawable/ic_tweet_send"
-        app:showAsAction="ifRoom"
+        android:orderInCategory="100"
         android:title="Send"
-        android:orderInCategory="100"/>
+        app:showAsAction="ifRoom" />
 </menu>

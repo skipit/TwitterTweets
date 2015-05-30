@@ -13,15 +13,14 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.codepath.apps.mysimpletweets.R;
+import com.codepath.apps.mysimpletweets.TwitterApplication;
 import com.codepath.apps.mysimpletweets.activities.TweetDetailActivity;
 import com.codepath.apps.mysimpletweets.adapters.TweetsArrayAdapter;
 import com.codepath.apps.mysimpletweets.models.Tweet;
+import com.codepath.apps.mysimpletweets.models.UserAccountInformation;
 import com.codepath.apps.mysimpletweets.utils.Constants;
 import com.codepath.apps.mysimpletweets.utils.EndlessScrollListener;
-
-import org.apache.http.Header;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.codepath.apps.mysimpletweets.utils.TwitterClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,13 +33,17 @@ public abstract class TweetsListFragment extends Fragment implements SwipeRefres
     private TweetsArrayAdapter aTweets;
     private ListView lvTweets;
 
-
+    protected UserAccountInformation userInfo;
+    /* Used to call the REST APIs */
+    protected TwitterClient client;
     /* The Handle to the SwipeRefresh */
     protected SwipeRefreshLayout swipeContainer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        client = TwitterApplication.getRestClient();
+        userInfo = (UserAccountInformation) getArguments().getSerializable("user_info");
         setupTweetList();
     }
 
@@ -68,7 +71,7 @@ public abstract class TweetsListFragment extends Fragment implements SwipeRefres
 
     private void setupTweetList() {
         tweets = new ArrayList<Tweet>();
-        aTweets = new TweetsArrayAdapter(getActivity(), R.layout.item_tweet, tweets);
+        aTweets = new TweetsArrayAdapter(getActivity(), R.layout.item_tweet, tweets, userInfo);
         aTweets.setOnRefreshListener(this);
     }
 
@@ -92,18 +95,18 @@ public abstract class TweetsListFragment extends Fragment implements SwipeRefres
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Tweet tweet = aTweets.getItem(position);
-                Log.d("DEBUG:","Item clicked at position " + position);
+                Log.d("DEBUG:", "Item clicked at position " + position);
 
                 Intent i = new Intent(getActivity(), TweetDetailActivity.class);
-                i.putExtra(Constants.tweetDetail, tweet );
+                i.putExtra(Constants.tweetDetail, tweet);
                 startActivity(i);
             }
         });
     }
 
-    public void addAll(List<Tweet> tweets, boolean clear ) {
+    public void addAll(List<Tweet> tweets, boolean clear) {
 
-        if ( true == clear ) {
+        if (true == clear) {
             aTweets.clear();
         }
         aTweets.addAll(tweets);
