@@ -5,6 +5,7 @@ import org.scribe.builder.api.FlickrApi;
 import org.scribe.builder.api.TwitterApi;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.codepath.apps.mysimpletweets.models.Tweet;
 import com.codepath.oauth.OAuthBaseClient;
@@ -56,13 +57,14 @@ public class TwitterClient extends OAuthBaseClient {
 
         String apiUrl;
 
-        //if ( retweetStatus == false ) {
+        if ( retweetStatus == false ) {
             apiUrl = getApiUrl("statuses/retweet/"+tweetId+".json");
-        //} else {
-            //TODO: End Point to undo Retweetß
-        //}
+        } else {
+            apiUrl = getApiUrl("statuses/destroy/" + tweetId);
+        }
         //RequestParams params = new RequestParams();
         //params.put("id", tweetId);
+        Log.d("DEBUG:", "URL: " + apiUrl);
         getClient().post(apiUrl, handler);
 
     }

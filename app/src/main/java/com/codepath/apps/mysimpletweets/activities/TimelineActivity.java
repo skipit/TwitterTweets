@@ -34,8 +34,7 @@ public class TimelineActivity extends ActionBarActivity {
 
     private UserAccountInformation accountInfo;
 
-    private HomeTimeLineFragment fragmentTweetsList;
-
+    private ViewPager viewPager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,13 +47,13 @@ public class TimelineActivity extends ActionBarActivity {
     }
 
     private void setupViewPager() {
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+         viewPager = (ViewPager) findViewById(R.id.viewpager);
 
         viewPager.setAdapter(new TweetsPagerAdapter(getSupportFragmentManager()));
 
         PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabStrip.setViewPager(viewPager);
-        
+
     }
 
     public UserAccountInformation getAccountInfo() {
@@ -120,13 +119,12 @@ public class TimelineActivity extends ActionBarActivity {
         startActivity(i);
     }
 
-    public void onRefresh() {
-        fragmentTweetsList.onRefresh();
-    }
-
     // Return the order of fragments in the view pager
     public class TweetsPagerAdapter extends FragmentPagerAdapter {
         final int PAGE_COUNT = 2;
+
+        private HomeTimeLineFragment homeTimeLineFragment = null;
+        private MentionsTimelineFragment mentionsTimelineFragment = null;
         private String tabTitles[] = { "Home", "Mentions"};
 
         public TweetsPagerAdapter(FragmentManager fm ) {
@@ -138,11 +136,17 @@ public class TimelineActivity extends ActionBarActivity {
             switch (position) {
                 default:
                 case 0:
-                    return new HomeTimeLineFragment();
+                    if ( homeTimeLineFragment == null ) {
+                        homeTimeLineFragment = new HomeTimeLineFragment();
+                    }
+                    return homeTimeLineFragment;
 
                 case 1:
-                    return new MentionsTimelineFragment();
+                    if(mentionsTimelineFragment == null ) {
+                        mentionsTimelineFragment = new MentionsTimelineFragment();
+                    }
 
+                    return mentionsTimelineFragment;
             }
         }
 

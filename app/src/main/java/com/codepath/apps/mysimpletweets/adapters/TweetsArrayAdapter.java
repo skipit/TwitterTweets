@@ -32,6 +32,8 @@ import java.util.List;
 
 public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
 
+    private OnRefreshListener onRefreshListener;
+
     private static class ViewHolder {
         ImageView ivProfileImage;
         TextView tvUserName;
@@ -45,8 +47,16 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         ImageView ivRetweetImage;
     }
 
+    public interface OnRefreshListener {
+        public void tweetDataSetChangedNotify();
+    }
+
      public TweetsArrayAdapter(Context context, int resource, List<Tweet> objects) {
         super(context, resource, objects);
+    }
+
+    public void setOnRefreshListener (OnRefreshListener listener ) {
+        this.onRefreshListener = listener;
     }
 
     @Override
@@ -133,7 +143,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             Log.d("DEBUG:", "Updated Favorites " + response.toString());
-                            ((TimelineActivity) getContext()).onRefresh();
+                            onRefreshListener.tweetDataSetChangedNotify();
                         }
 
                         @Override
@@ -149,11 +159,11 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
 
                 @Override
                 public void onClick(View v) {
-                    client.retweet(tweet.isRetweeted(), tweet.getId(), new JsonHttpResponseHandler(){
+                    client.retweet(tweet.isRetweeted(), tweet.getUid(), new JsonHttpResponseHandler(){
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             Log.d("DEBUG:", "Retweeted Successfully " + response.toString());
-                            ((TimelineActivity) getContext()).onRefresh();
+                            onRefreshListener.tweetDataSetChangedNotify();
                         }
 
                         @Override

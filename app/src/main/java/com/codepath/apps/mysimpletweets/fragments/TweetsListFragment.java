@@ -26,7 +26,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class TweetsListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public abstract class TweetsListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, TweetsArrayAdapter.OnRefreshListener {
 
 
     /* Holds the tweets and adapts it to the ListView */
@@ -37,15 +37,6 @@ public abstract class TweetsListFragment extends Fragment implements SwipeRefres
 
     /* The Handle to the SwipeRefresh */
     protected SwipeRefreshLayout swipeContainer;
-
-    public interface RefreshListListener {
-        void onRefresh();
-    }
-
-    public interface LoadMoreItemListener {
-        void onLoadMore();
-    }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,6 +69,7 @@ public abstract class TweetsListFragment extends Fragment implements SwipeRefres
     private void setupTweetList() {
         tweets = new ArrayList<Tweet>();
         aTweets = new TweetsArrayAdapter(getActivity(), R.layout.item_tweet, tweets);
+        aTweets.setOnRefreshListener(this);
     }
 
     /**
@@ -123,4 +115,9 @@ public abstract class TweetsListFragment extends Fragment implements SwipeRefres
     }
 
     public abstract void loadMore();
+
+    @Override
+    public void tweetDataSetChangedNotify() {
+        onRefresh();
+    }
 }
