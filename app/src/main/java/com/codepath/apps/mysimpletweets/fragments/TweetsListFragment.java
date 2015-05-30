@@ -17,7 +17,7 @@ import com.codepath.apps.mysimpletweets.TwitterApplication;
 import com.codepath.apps.mysimpletweets.activities.TweetDetailActivity;
 import com.codepath.apps.mysimpletweets.adapters.TweetsArrayAdapter;
 import com.codepath.apps.mysimpletweets.models.Tweet;
-import com.codepath.apps.mysimpletweets.models.UserAccountInformation;
+import com.codepath.apps.mysimpletweets.models.User;
 import com.codepath.apps.mysimpletweets.utils.Constants;
 import com.codepath.apps.mysimpletweets.utils.EndlessScrollListener;
 import com.codepath.apps.mysimpletweets.utils.TwitterClient;
@@ -33,7 +33,7 @@ public abstract class TweetsListFragment extends Fragment implements SwipeRefres
     private TweetsArrayAdapter aTweets;
     private ListView lvTweets;
 
-    protected UserAccountInformation userInfo;
+    protected User userInfo;
     /* Used to call the REST APIs */
     protected TwitterClient client;
     /* The Handle to the SwipeRefresh */
@@ -43,7 +43,7 @@ public abstract class TweetsListFragment extends Fragment implements SwipeRefres
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         client = TwitterApplication.getRestClient();
-        userInfo = (UserAccountInformation) getArguments().getSerializable("user_info");
+        userInfo = (User) getArguments().getSerializable("user_info");
         setupTweetList();
     }
 

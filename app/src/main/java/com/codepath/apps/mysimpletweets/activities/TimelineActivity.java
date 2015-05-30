@@ -17,7 +17,7 @@ import com.codepath.apps.mysimpletweets.R;
 import com.codepath.apps.mysimpletweets.TwitterApplication;
 import com.codepath.apps.mysimpletweets.fragments.HomeTimeLineFragment;
 import com.codepath.apps.mysimpletweets.fragments.MentionsTimelineFragment;
-import com.codepath.apps.mysimpletweets.models.UserAccountInformation;
+import com.codepath.apps.mysimpletweets.models.User;
 import com.codepath.apps.mysimpletweets.utils.Constants;
 import com.codepath.apps.mysimpletweets.utils.NetStatus;
 import com.codepath.apps.mysimpletweets.utils.TwitterClient;
@@ -32,7 +32,7 @@ public class TimelineActivity extends ActionBarActivity {
     /* Used to call the REST APIs */
     private TwitterClient client;
 
-    private UserAccountInformation userInfo;
+    private User userInfo;
 
     private ViewPager viewPager;
 
@@ -64,7 +64,7 @@ public class TimelineActivity extends ActionBarActivity {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     Log.d("DEBUG", response.toString());
-                    userInfo = UserAccountInformation.fromJSONObject(response);
+                    userInfo = User.fromJSON(response);
                 }
 
                 @Override

@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.codepath.apps.mysimpletweets.R;
 import com.codepath.apps.mysimpletweets.TwitterApplication;
 import com.codepath.apps.mysimpletweets.models.Tweet;
-import com.codepath.apps.mysimpletweets.models.UserAccountInformation;
+import com.codepath.apps.mysimpletweets.models.User;
 import com.codepath.apps.mysimpletweets.utils.Constants;
 import com.codepath.apps.mysimpletweets.utils.NetStatus;
 import com.codepath.apps.mysimpletweets.utils.TwitterClient;
@@ -28,7 +28,7 @@ import org.json.JSONObject;
 public class TweetComposeActivity extends ActionBarActivity {
 
     private Menu menu;
-    private UserAccountInformation userInfo;
+    private User userInfo;
     private Tweet tweet;
     MenuItem miRemainingChar;
     /* Used to call the REST APIs */
@@ -43,7 +43,7 @@ public class TweetComposeActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tweet_compose);
 
-        userInfo = (UserAccountInformation) getIntent().getSerializableExtra(Constants.userInfo);
+        userInfo = (User) getIntent().getSerializableExtra(Constants.userInfo);
         tweet = (Tweet) getIntent().getSerializableExtra(Constants.tweetDetail);
 
         ActionBar actionBar = getSupportActionBar(); // or getActionBar();

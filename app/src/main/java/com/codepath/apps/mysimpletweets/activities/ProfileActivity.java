@@ -12,13 +12,13 @@ import android.widget.TextView;
 import com.codepath.apps.mysimpletweets.R;
 import com.codepath.apps.mysimpletweets.TwitterApplication;
 import com.codepath.apps.mysimpletweets.fragments.UserTimelineFragment;
-import com.codepath.apps.mysimpletweets.models.UserAccountInformation;
+import com.codepath.apps.mysimpletweets.models.User;
 import com.codepath.apps.mysimpletweets.utils.Constants;
 import com.codepath.apps.mysimpletweets.utils.TwitterClient;
 
 public class ProfileActivity extends ActionBarActivity {
 
-    private UserAccountInformation userInfo;
+    private User userInfo;
     private TwitterClient client;
 
     @Override
@@ -26,7 +26,7 @@ public class ProfileActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        userInfo = (UserAccountInformation) getIntent().getSerializableExtra(Constants.userInfo);
+        userInfo = (User) getIntent().getSerializableExtra(Constants.userInfo);
         ActionBar actionBar = getSupportActionBar(); // or getActionBar();
         actionBar.setTitle("@" + userInfo.getScreenName());
 

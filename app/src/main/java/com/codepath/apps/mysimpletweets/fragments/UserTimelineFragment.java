@@ -7,11 +7,9 @@ import android.widget.Toast;
 
 import com.activeandroid.query.Select;
 import com.codepath.apps.mysimpletweets.R;
-import com.codepath.apps.mysimpletweets.TwitterApplication;
 import com.codepath.apps.mysimpletweets.models.Tweet;
-import com.codepath.apps.mysimpletweets.models.UserAccountInformation;
+import com.codepath.apps.mysimpletweets.models.User;
 import com.codepath.apps.mysimpletweets.utils.NetStatus;
-import com.codepath.apps.mysimpletweets.utils.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.apache.http.Header;
@@ -31,7 +29,7 @@ public class UserTimelineFragment extends TweetsListFragment {
         getUserTimeline();
     }
 
-    public static UserTimelineFragment Instance(UserAccountInformation info) {
+    public static UserTimelineFragment Instance(User info) {
         UserTimelineFragment userFragment = new UserTimelineFragment();
         Bundle args = new Bundle();
         args.putSerializable("user_info", info);

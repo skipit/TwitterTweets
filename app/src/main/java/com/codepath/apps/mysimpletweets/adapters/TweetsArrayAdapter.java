@@ -15,7 +15,7 @@ import com.codepath.apps.mysimpletweets.R;
 import com.codepath.apps.mysimpletweets.TwitterApplication;
 import com.codepath.apps.mysimpletweets.activities.TweetComposeActivity;
 import com.codepath.apps.mysimpletweets.models.Tweet;
-import com.codepath.apps.mysimpletweets.models.UserAccountInformation;
+import com.codepath.apps.mysimpletweets.models.User;
 import com.codepath.apps.mysimpletweets.utils.Constants;
 import com.codepath.apps.mysimpletweets.utils.NetStatus;
 import com.codepath.apps.mysimpletweets.utils.Transform;
@@ -31,7 +31,7 @@ import java.util.List;
 public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
 
     private OnRefreshListener onRefreshListener;
-    private UserAccountInformation userInfo;
+    private User userInfo;
 
 
     private static class ViewHolder {
@@ -51,7 +51,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         public void tweetDataSetChangedNotify();
     }
 
-    public TweetsArrayAdapter(Context context, int resource, List<Tweet> objects, UserAccountInformation userInfo ) {
+    public TweetsArrayAdapter(Context context, int resource, List<Tweet> objects, User userInfo ) {
         super(context, resource, objects);
 
         this.userInfo = userInfo;
