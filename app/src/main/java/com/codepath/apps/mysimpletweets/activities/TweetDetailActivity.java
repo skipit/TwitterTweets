@@ -4,10 +4,14 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.codepath.apps.mysimpletweets.R;
 import com.codepath.apps.mysimpletweets.models.Tweet;
 import com.codepath.apps.mysimpletweets.utils.Constants;
+import com.codepath.apps.mysimpletweets.utils.Transform;
+import com.squareup.picasso.Picasso;
 
 public class TweetDetailActivity extends ActionBarActivity {
 
@@ -20,11 +24,24 @@ public class TweetDetailActivity extends ActionBarActivity {
 
         tweet = (Tweet) getIntent().getSerializableExtra(Constants.tweetDetail);
 
-        getTweetInfo(tweet);
+        setupTweetInfo(tweet);
     }
 
-    private void getTweetInfo(Tweet tweet) {
+    private void setupTweetInfo(Tweet tweet) {
+        ImageView ivTweetImage = (ImageView) findViewById(R.id.ivTweetDetailProfileImage);
+        TextView tvUserName = (TextView) findViewById(R.id.tvTweetDetailUserName);
+        TextView tvScreenName = (TextView) findViewById(R.id.tvTweetDetailScreenName);
+        TextView tvBody = (TextView) findViewById(R.id.tvTweetDetailBody);
+        TextView tvSince = (TextView) findViewById(R.id.tvTweetDetailSince);
 
+        Picasso.with(this)
+                .load(tweet.getUser().getProfileImageUrl())
+                .into(ivTweetImage);
+
+        tvUserName.setText(tweet.getUser().getName());
+        tvScreenName.setText(tweet.getUser().getScreenName());
+        tvBody.setText(tweet.getBody());
+        tvSince.setText(Transform.getRelativeTimeAgo(tweet.getCreatedAt()));
     }
 
 
