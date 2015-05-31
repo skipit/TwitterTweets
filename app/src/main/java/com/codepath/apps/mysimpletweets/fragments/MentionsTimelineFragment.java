@@ -45,6 +45,8 @@ public class MentionsTimelineFragment extends TweetsListFragment {
      */
     private void getMentionsTweets() {
 
+        Log.d("DEBUG:", "GetMentionsTwets() Called");
+
         if (NetStatus.getInstance(getActivity()).isOnline() == true) {
             client.getMentionsTimeline(new JsonHttpResponseHandler() {
                 @Override
