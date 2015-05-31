@@ -15,6 +15,7 @@ import com.codepath.apps.mysimpletweets.fragments.UserTimelineFragment;
 import com.codepath.apps.mysimpletweets.models.User;
 import com.codepath.apps.mysimpletweets.utils.Constants;
 import com.codepath.apps.mysimpletweets.utils.TwitterClient;
+import com.squareup.picasso.Picasso;
 
 public class ProfileActivity extends ActionBarActivity {
 
@@ -45,7 +46,16 @@ public class ProfileActivity extends ActionBarActivity {
         TextView tvFollowingCount = (TextView) findViewById(R.id.tvFollowingValue);
         ImageView ivProfileImage = (ImageView) findViewById(R.id.ivProfileActImage);
 
+        tvUserName.setText(userInfo.getName());
+        tvScreenName.setText(userInfo.getScreenName());
+        tvTagLine.setText(userInfo.getTagLine());
+        tvTweetCount.setText(""+userInfo.getTweetCount());
+        tvFollowerCount.setText(""+userInfo.getFollowerCount());
+        tvFollowingCount.setText(""+userInfo.getFollowingCount());
 
+        Picasso.with(this)
+                .load(userInfo.getProfileImageUrl())
+                .into(ivProfileImage);
 
     }
 

@@ -21,6 +21,14 @@ public class User extends Model implements Serializable {
     private String screenName;
     @Column(name = "ProfileImageUrl")
     private String profileImageUrl;
+    @Column(name = "FollowingCount")
+    private int followingCount;
+    @Column(name = "TweetCount")
+    private int tweetCount;
+    @Column(name = "FollowerCount")
+    private int followerCount;
+    @Column(name = "TagLine")
+    private String tagLine;
 
     public String getName() {
         return name;
@@ -36,6 +44,23 @@ public class User extends Model implements Serializable {
 
     public String getProfileImageUrl() {
         return profileImageUrl;
+    }
+
+
+    public int getFollowingCount() {
+        return followingCount;
+    }
+
+    public int getTweetCount() {
+        return tweetCount;
+    }
+
+    public int getFollowerCount() {
+        return followerCount;
+    }
+
+    public String getTagLine() {
+        return tagLine;
     }
 
     public User() {
@@ -54,6 +79,10 @@ public class User extends Model implements Serializable {
             user.uid = json.getLong("id");
             user.screenName = json.getString("screen_name");
             user.profileImageUrl = json.getString("profile_image_url");
+            user.followerCount = json.getInt("followers_count");
+            user.tagLine = json.getString("description");
+            user.followingCount = json.getInt("friends_count");
+            user.tweetCount = json.getInt("statuses_count");
 
             //TODO: Temporary Location to Save
             user.save();
