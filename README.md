@@ -1,6 +1,8 @@
-# Project 3 - TwitterTweets
+# Project 4 - TwitterTweets Phase - II 
 
 TwitterTweets is an android app that allows a user to view his Twitter timeline and post a new tweet. The app utilizes [Twitter REST API](https://dev.twitter.com/rest/public).
+
+Note: Project 3 now lives in a branch named [TwitterAppPhaseI](https://github.com/skipit/TwitterTweets/tree/TwitterAppPhaseI)
 
 Time spent: 6 hours spent in total
 
