@@ -32,7 +32,7 @@ public class TimelineActivity extends ActionBarActivity {
     /* Used to call the REST APIs */
     private TwitterClient client;
 
-    private User userInfo;
+    private User userInfo = null;
 
     private ViewPager viewPager;
 
@@ -44,7 +44,6 @@ public class TimelineActivity extends ActionBarActivity {
         client = TwitterApplication.getRestClient();
         getUserInformation();
 
-        setupViewPager();
     }
 
     private void setupViewPager() {
@@ -63,8 +62,10 @@ public class TimelineActivity extends ActionBarActivity {
             client.getUserInfo(new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    Log.d("DEBUG", response.toString());
+                    Log.d("DEBUG:", response.toString());
                     userInfo = User.fromJSON(response);
+
+                    setupViewPager();
                 }
 
                 @Override

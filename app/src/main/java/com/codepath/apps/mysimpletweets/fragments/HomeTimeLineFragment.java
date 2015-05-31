@@ -29,6 +29,7 @@ public class HomeTimeLineFragment extends TweetsListFragment {
         HomeTimeLineFragment fragment = new HomeTimeLineFragment();
         Bundle args = new Bundle();
         args.putSerializable("user_info", info);
+        Log.d("DEBUG:", "HomeTimeLineFragment:Instance() " + info.getScreenName());
         fragment.setArguments(args);
         return fragment;
     }

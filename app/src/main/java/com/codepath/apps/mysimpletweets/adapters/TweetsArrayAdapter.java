@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.codepath.apps.mysimpletweets.R;
 import com.codepath.apps.mysimpletweets.TwitterApplication;
+import com.codepath.apps.mysimpletweets.activities.ProfileActivity;
 import com.codepath.apps.mysimpletweets.activities.TweetComposeActivity;
 import com.codepath.apps.mysimpletweets.models.Tweet;
 import com.codepath.apps.mysimpletweets.models.User;
@@ -132,6 +133,17 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
                     getContext().startActivity(i);
 
                     Log.d("DEBUG:", userInfo.getScreenName());
+                }
+            });
+
+            viewHolder.ivProfileImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("DEBUG:", "Profile Image clicked");
+                    Intent i = new Intent(getContext(), ProfileActivity.class);
+                    i.putExtra(Constants.userInfo, tweet.getUser());
+                    getContext().startActivity(i);
+                    Log.d("DEBUG:", tweet.getUser().getScreenName());
                 }
             });
 
