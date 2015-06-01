@@ -6,6 +6,7 @@
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent" android:layout_height="wrap_content"
         android:padding="10dp"
+        android:descendantFocusability="blocksDescendants"
         android:id="@+id/tweet_detail">
 
 
@@ -46,6 +47,7 @@
             android:text="@string/body"
             android:id="@+id/tvTweetDetailBody"
             android:paddingTop="5dp"
+            android:autoLink="all"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_below="@+id/tvTweetDetailScreenName"
             android:layout_toRightOf="@+id/ivTweetDetailProfileImage"/>

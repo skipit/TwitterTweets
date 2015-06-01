@@ -23,6 +23,8 @@ public class Tweet extends Model implements Serializable {
     private String body;
     @Column(name = "User", onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
     private User user;
+    @Column(name = "Media", onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
+    private Media media;
     @Column(name = "CreatedAt")
     private String createdAt;
     @Column(name = "RetweetCount")
@@ -89,6 +91,15 @@ public class Tweet extends Model implements Serializable {
 
             tweet.user = User.fromJSON(json.getJSONObject("user"));
 
+            try {
+                /* For now just have reference to the first Media */
+                tweet.media = Media.fromJSONArray(json.getJSONObject("entities").getJSONArray("media")).get(0);
+                Log.d("DEBUG:", "Media Found");
+            } catch (JSONException e) {
+                Log.d("DEBUG:", "no media found");
+                tweet.media = null;
+            }
+
             tweet.createdAt = json.getString("created_at");
             try {
                 tweet.retweetCount = json.getInt("retweet_count");
@@ -135,8 +146,6 @@ public class Tweet extends Model implements Serializable {
                 e.printStackTrace();
                 continue; // Process the rest of the tweets.
             }
-            Tweet tweet = Tweet.fromJSON(tweetJson);
-
         }
         return tweets;
     }

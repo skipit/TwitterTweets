@@ -167,30 +167,33 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
                 }
             });
 
-            viewHolder.ivRetweetImage.setOnClickListener(new View.OnClickListener() {
-                final TwitterClient client = TwitterApplication.getRestClient();
+            /* Allow to retweet, but not undo retweet */
+            if ( tweet.isRetweeted() == false ) {
+                viewHolder.ivRetweetImage.setOnClickListener(new View.OnClickListener() {
+                    final TwitterClient client = TwitterApplication.getRestClient();
 
-                @Override
-                public void onClick(View v) {
-                    client.retweet(tweet.isRetweeted(), tweet.getUid(), new JsonHttpResponseHandler() {
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                            Log.d("DEBUG:", "Retweeted Successfully " + response.toString());
-                            onRefreshListener.tweetDataSetChangedNotify();
-                        }
+                    @Override
+                    public void onClick(View v) {
+                        client.retweet(tweet.isRetweeted(), tweet.getUid(), new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                Log.d("DEBUG:", "Retweeted Successfully " + response.toString());
+                                onRefreshListener.tweetDataSetChangedNotify();
+                            }
 
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                            Log.d("DEBUG:", "Could not retweet " + errorResponse.toString());
-                        }
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                Log.d("DEBUG:", "Could not retweet " + errorResponse.toString());
+                            }
 
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                            Log.d("DEBUG:", "Could not retweet " + responseString);
-                        }
-                    });
-                }
-            });
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                                Log.d("DEBUG:", "Could not retweet " + responseString);
+                            }
+                        });
+                    }
+                });
+            }
         }
 
         return convertView;
