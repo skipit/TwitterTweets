@@ -13,12 +13,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codepath.apps.mysimpletweets.R;
+import com.codepath.apps.mysimpletweets.TwitterApplication;
 import com.codepath.apps.mysimpletweets.models.Tweet;
 import com.codepath.apps.mysimpletweets.models.User;
 import com.codepath.apps.mysimpletweets.utils.Constants;
 import com.codepath.apps.mysimpletweets.utils.NetStatus;
 import com.codepath.apps.mysimpletweets.utils.Transform;
+import com.codepath.apps.mysimpletweets.utils.TwitterClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
+
+import org.apache.http.Header;
+import org.json.JSONObject;
 
 public class TweetDetailActivity extends ActionBarActivity {
 
@@ -39,7 +45,7 @@ public class TweetDetailActivity extends ActionBarActivity {
         setupTweetInfo(tweet);
     }
 
-    private void setupTweetInfo(Tweet tweet) {
+    private void setupTweetInfo(final Tweet tweet) {
         ImageView ivTweetImage = (ImageView) findViewById(R.id.ivTweetDetailProfileImage);
         TextView tvUserName = (TextView) findViewById(R.id.tvTweetDetailUserName);
         TextView tvScreenName = (TextView) findViewById(R.id.tvTweetDetailScreenName);
@@ -51,6 +57,7 @@ public class TweetDetailActivity extends ActionBarActivity {
 
         ImageView ivRetweetImage = (ImageView) findViewById(R.id.ivTweetDetailRetweet);
         ImageView ivFavImage = (ImageView) findViewById(R.id.ivTweetDetailFavorites);
+        ImageView ivTweetMedia = (ImageView) findViewById(R.id.ivTweetDetailMedia);
 
         Picasso.with(this)
                 .load(tweet.getUser().getProfileImageUrl())
@@ -63,6 +70,14 @@ public class TweetDetailActivity extends ActionBarActivity {
         tvRetweetValue.setText(""+tweet.getRetweetCount());
         tvFavValue.setText(""+tweet.getFavoriteCount());
 
+        if ( tweet.getMedia() != null ) {
+            ivTweetMedia.setVisibility(View.VISIBLE);
+            Picasso.with(this)
+                    .load(tweet.getMedia().getPhotoUrl())
+                    .into(ivTweetMedia);
+        } else {
+            ivTweetMedia.setVisibility(View.INVISIBLE);
+        }
         if (tweet.isFavorited()) {
             ivFavImage.setImageResource(R.drawable.ic_fav_favorited);
         } else {
@@ -76,7 +91,6 @@ public class TweetDetailActivity extends ActionBarActivity {
         }
 
         if (NetStatus.getInstance(this).isOnline() == true) {
-            final Tweet finalTweet = tweet;
 
             ivReplyImage.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -84,10 +98,37 @@ public class TweetDetailActivity extends ActionBarActivity {
                     Log.d("DEBUG:", "Image Clicked");
                     Intent i = new Intent(TweetDetailActivity.this, TweetComposeActivity.class);
                     i.putExtra(Constants.userInfo, userInfo);
-                    i.putExtra(Constants.tweetDetail, finalTweet);
+                    i.putExtra(Constants.tweetDetail, tweet);
                     startActivity(i);
 
                     Log.d("DEBUG:", userInfo.getScreenName());
+                }
+            });
+
+            ivFavImage.setOnClickListener(new View.OnClickListener() {
+
+                final TwitterClient client = TwitterApplication.getRestClient();
+                @Override
+                public void onClick(View v) {
+                    client.postFavTweet(tweet.isFavorited(), tweet.getUid(), new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            Log.d("DEBUG:", "Updated Favorites " + response.toString());
+                            Tweet tweet = Tweet.fromJSON(response);
+
+                            /* Reload the Activity with new information */
+                            Intent refresh = new Intent(TweetDetailActivity.this, TweetDetailActivity.class);
+                            refresh.putExtra(Constants.tweetDetail, tweet);
+                            refresh.putExtra(Constants.userInfo, userInfo);
+                            startActivity(refresh);//Start the same Activity
+                            finish();
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                            Log.d("DEBUG:", "Could not Update Favorites " + errorResponse.toString());
+                        }
+                    });
                 }
             });
         }

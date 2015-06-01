@@ -36,6 +36,9 @@ public class Tweet extends Model implements Serializable {
     @Column(name = "Retweeted")
     private boolean retweeted;
 
+    @Column(name = "RetweetId")
+    private long retweetId;
+
     public Tweet() {
         super();
         retweetCount = 0;
@@ -45,6 +48,14 @@ public class Tweet extends Model implements Serializable {
 
     }
 
+
+    public long getRetweetId() {
+        return retweetId;
+    }
+
+    public Media getMedia() {
+        return media;
+    }
 
     public String getBody() {
         return body;
@@ -96,7 +107,7 @@ public class Tweet extends Model implements Serializable {
                 tweet.media = Media.fromJSONArray(json.getJSONObject("entities").getJSONArray("media")).get(0);
                 Log.d("DEBUG:", "Media Found");
             } catch (JSONException e) {
-                Log.d("DEBUG:", "no media found");
+                Log.d("DEBUG:", "no media found @ " + tweet.getBody());
                 tweet.media = null;
             }
 
@@ -118,6 +129,12 @@ public class Tweet extends Model implements Serializable {
             tweet.favorited = json.getBoolean("favorited");
             tweet.retweeted = json.getBoolean("retweeted");
 
+            try {
+                tweet.retweetId = json.getJSONObject("retweeted_status").getLong("id");
+            } catch (JSONException e) {
+                Log.d("DEBUG:", "No Retweet Status found");
+                tweet.favoriteCount = 0;
+            }
             // TODO: Temporary Location to save tweet.
             tweet.save();
 

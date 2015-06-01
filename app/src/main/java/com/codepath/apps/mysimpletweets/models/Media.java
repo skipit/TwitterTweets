@@ -21,6 +21,13 @@ public class Media extends Model implements Serializable {
     @Column(name = "PhotoUrl")
     private String photoUrl;
 
+    public long getUid() {
+        return uid;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
 
     public static ArrayList<Media> fromJSONArray(JSONArray jsonArray) {
         ArrayList<Media> mediaList = new ArrayList<>();

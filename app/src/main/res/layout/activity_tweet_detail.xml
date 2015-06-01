@@ -52,6 +52,16 @@
             android:layout_below="@+id/tvTweetDetailScreenName"
             android:layout_toRightOf="@+id/ivTweetDetailProfileImage"/>
 
+        <ImageView
+            android:paddingTop="5dp"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ivTweetDetailMedia"
+            android:maxWidth="600dp"
+            android:scaleType="centerInside"
+            android:adjustViewBounds="true"
+            android:layout_below="@id/tvTweetDetailBody"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
