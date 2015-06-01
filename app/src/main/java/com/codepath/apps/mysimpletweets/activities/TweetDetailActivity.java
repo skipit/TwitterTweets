@@ -48,6 +48,10 @@ public class TweetDetailActivity extends ActionBarActivity {
         TextView tvRetweetValue = (TextView) findViewById(R.id.tvRetweetValue);
         TextView tvFavValue = (TextView) findViewById(R.id.tvFavoritesValue);
         ImageView ivReplyImage = (ImageView) findViewById(R.id.ivTweetDetailReply);
+
+        ImageView ivRetweetImage = (ImageView) findViewById(R.id.ivTweetDetailRetweet);
+        ImageView ivFavImage = (ImageView) findViewById(R.id.ivTweetDetailFavorites);
+
         Picasso.with(this)
                 .load(tweet.getUser().getProfileImageUrl())
                 .into(ivTweetImage);
@@ -58,6 +62,18 @@ public class TweetDetailActivity extends ActionBarActivity {
         tvSince.setText(Transform.getRelativeTimeAgo(tweet.getCreatedAt()));
         tvRetweetValue.setText(""+tweet.getRetweetCount());
         tvFavValue.setText(""+tweet.getFavoriteCount());
+
+        if (tweet.isFavorited()) {
+            ivFavImage.setImageResource(R.drawable.ic_fav_favorited);
+        } else {
+            ivFavImage.setImageResource(R.drawable.ic_fav);
+        }
+
+        if (tweet.isRetweeted()) {
+            ivRetweetImage.setImageResource(R.drawable.ic_retweeted);
+        } else {
+            ivRetweetImage.setImageResource(R.drawable.ic_retweet);
+        }
 
         if (NetStatus.getInstance(this).isOnline() == true) {
             final Tweet finalTweet = tweet;
