@@ -64,4 +64,74 @@
 
     </RelativeLayout>
 
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tweet_detail"
+        android:id="@+id/tweet_detail_rlDecorators"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:orientation="vertical"
+            android:gravity="center">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/tvRetweets"
+                android:id="@+id/tvRetweet"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvRetweetValue"
+                android:paddingTop="5dp"
+                android:text="0"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical"
+            android:id="@+id/FavoritesLayout"
+            android:gravity="center">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/tvFavorites"
+                android:id="@+id/tvFavorites"
+                android:layout_centerHorizontal="true" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvFavoritesValue"
+                android:paddingTop="5dp"
+                android:text="0"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:layout_alignParentRight="true"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:paddingRight="15dp"
+                android:id="@+id/ivTweetDetailReply"
+                android:src="@mipmap/ic_reply_tweet_detail" />
+
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
 </RelativeLayout>

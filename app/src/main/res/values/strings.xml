@@ -21,5 +21,7 @@
     <string name="tvTweets">Tweets</string>
     <string name="tvFollowing">Following</string>
     <string name="tvFollowers">Followers</string>
+    <string name="tvRetweets">Retweets</string>
+    <string name="tvFavorites">Favorites</string>
 
 </resources>

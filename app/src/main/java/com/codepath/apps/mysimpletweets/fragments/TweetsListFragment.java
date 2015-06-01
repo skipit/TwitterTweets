@@ -43,7 +43,7 @@ public abstract class TweetsListFragment extends Fragment implements SwipeRefres
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         client = TwitterApplication.getRestClient();
-        userInfo = (User) getArguments().getSerializable("user_info");
+        userInfo = (User) getArguments().getSerializable(Constants.userInfo);
         setupTweetList();
     }
 
@@ -98,6 +98,7 @@ public abstract class TweetsListFragment extends Fragment implements SwipeRefres
                 Log.d("DEBUG:", "Item clicked at position " + position);
 
                 Intent i = new Intent(getActivity(), TweetDetailActivity.class);
+                i.putExtra(Constants.userInfo, userInfo);
                 i.putExtra(Constants.tweetDetail, tweet);
                 startActivity(i);
             }
